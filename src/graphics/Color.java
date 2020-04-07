@@ -1,4 +1,4 @@
-package com.company.graphics;
+package graphics;
 
  public class Color {
 

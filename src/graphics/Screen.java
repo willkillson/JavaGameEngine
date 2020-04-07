@@ -1,6 +1,5 @@
-package com.company.graphics;
+package graphics;
 
-import static com.company.graphics.Color.*;
 
 public class Screen {
 

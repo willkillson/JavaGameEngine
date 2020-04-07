@@ -1,10 +1,7 @@
-package com.company.game;
+package game;
 
-import com.company.graphics.Color;
-import com.company.graphics.Screen;
+import graphics.Screen;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Game {

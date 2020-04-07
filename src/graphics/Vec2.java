@@ -1,4 +1,5 @@
-package com.company.graphics;
+package graphics;
+
 
 public class Vec2 {
     public double x;

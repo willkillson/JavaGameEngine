@@ -1,7 +1,6 @@
-package com.company.game;
-
-import com.company.graphics.Color;
-import com.company.graphics.Screen;
+package game;
+import graphics.Screen;
+import graphics.Color;
 
 public class Unit{
 

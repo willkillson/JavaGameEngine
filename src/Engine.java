@@ -1,7 +1,5 @@
-package com.company;
-import com.company.game.*;
-
-import com.company.graphics.*;
+import game.Game;
+import graphics.Screen;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -27,7 +25,7 @@ public class Engine extends Canvas implements Runnable{
     private Screen screen;
 
     private BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
-    private BufferedImage image2 = ImageLoader.loadImage("kevin.bmp");
+    private BufferedImage image2 = ImageLoader.loadImage("Doggie.png");
     private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 
     public static void main(String[] args) {

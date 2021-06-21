@@ -123,4 +123,6 @@ public class Screen {
     public void putPixel(int x, int y, Color c) {
         putPixel(x,y,c.r,c.g,c.b);
     }
+
+    
 }

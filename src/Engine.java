@@ -1,13 +1,15 @@
 import game.Game;
 import graphics.Screen;
+import graphics.Vec2;
+import input.InputHandler;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -18,11 +20,13 @@ public class Engine extends Canvas implements Runnable{
     public static int scale = 3;
 
     private Thread thread;
-    private JFrame frame;
+    public JFrame frame;
     private boolean running = false;
 
+    private InputHandler inputHandler;
     Game game;
     private Screen screen;
+    
 
     private BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
     private BufferedImage image2 = ImageLoader.loadImage("Doggie.png");
@@ -40,6 +44,11 @@ public class Engine extends Canvas implements Runnable{
 
         screen = new Screen(width,height);
         frame = new JFrame();
+
+        this.inputHandler = new InputHandler();
+        this.addMouseListener(this.inputHandler);
+        this.addMouseMotionListener(this.inputHandler);
+
         frame.setResizable(false);
         frame.setTitle("TestBench");
         frame.add(this);
@@ -69,9 +78,11 @@ public class Engine extends Canvas implements Runnable{
 
     @Override
     public void run() {
-        game = new Game(screen);
+        game = new Game(screen, this.inputHandler);
 
         game.init();
+
+        // Main game loop
         while(running){
             game.update();
             game.composeFrame();
@@ -91,12 +102,40 @@ public class Engine extends Canvas implements Runnable{
         }
 
         Graphics g = bs.getDrawGraphics();
+        
         g.drawImage(image, 0,0,getWidth(),getHeight(), null);
         g.drawImage(image2, 0,0,image2.getWidth(),image2.getHeight(), null);
+
+        Font myFont =  new java.awt.Font("MONOSPACED", Font.PLAIN,24);
+        g.setFont(myFont);
+
+        try{        
+            PointerInfo mi = java.awt.MouseInfo.getPointerInfo();
+            GraphicsDevice gd = mi.getDevice();
+            double mouse_x = frame.getMousePosition().x;
+            double mouse_y = frame.getMousePosition().x;
+            double width = gd.getDefaultConfiguration().getBounds().getWidth();
+            double height = gd.getDefaultConfiguration().getBounds().getHeight();
+
+            String mouseLocation = 
+            "mouse_x: " + mouse_x + " " + 
+            "mouse_y: " + mouse_y + " " + 
+            "screen_width: "+ width + " " +
+            "screen_height: "+ height + " "+
+            "mouse_buttons: "+ java.awt.MouseInfo.getNumberOfButtons();
+
+            g.drawString(mouseLocation, 50, 50);
+            //System.out.println(mouseLocation);
+
+        }catch(Exception e){
+           //System.out.println(e);
+        }
+
+
+        
+        
         g.dispose();
         bs.show();
-
-
 
     }
 
@@ -119,7 +158,5 @@ public class Engine extends Canvas implements Runnable{
             return bi;
         }
     }
-
-
 
 }

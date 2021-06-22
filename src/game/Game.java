@@ -37,10 +37,13 @@ public class Game {
         this.eventQue = inputHandler.eventQue;
         gameObjects = new ArrayList<>();
 
+    }
+    
+    public void init(){
         //grid setup
         
         this.orientation = Orientation.layoutPointy();
-        this.size = new Point(50.0,50.0);
+        this.size = new Point(5.0,5.0);
         this.origin = new Point(screen.width/2.0,screen.height/2.0);
         this.layout = new Layout(orientation,size,origin);
 
@@ -53,10 +56,9 @@ public class Game {
                 }
             }
         }
-    }
-    public void init(){
+
         //create some unit objects and sdtore them into an array
-        for(int i = 0;i< 10;i++){
+        for(int i = 0;i< 100;i++){
             gameObjects.add(
                 new PixelUnit(screen,new Vec2(screen.width*Math.random(),screen.height*Math.random()), 
                 new Vec2(1*Math.random(),10*Math.random()), 
@@ -86,10 +88,10 @@ public class Game {
     
                 switch(event.name){
                     case "mousePressed":
-                    for(GameObject u: gameObjects){
-                        //Vec2 newPos = getScreenCordinates(new Vec2(event.position_x,event.position_y));
-                        //u.rePosition(newPos);
-                    }
+                        Vec2 newPos = getScreenCordinates(new Vec2(event.position_x,event.position_y));
+                        System.out.println("mousePressed: "+newPos.x + " : "+newPos.y);
+                        this.origin = new Point(newPos.x, newPos.y);
+                        this.layout = new Layout(orientation,size,origin);
                     break;
                     case "mouseReleased":
                     break;
@@ -117,9 +119,6 @@ public class Game {
         }
 
     }
-
-
-
 
 }
 

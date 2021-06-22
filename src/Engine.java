@@ -2,6 +2,7 @@ import game.Game;
 import graphics.Screen;
 import graphics.Vec2;
 import input.InputHandler;
+import input.KeyHandler;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,6 +25,7 @@ public class Engine extends Canvas implements Runnable{
     private boolean running = false;
 
     private InputHandler inputHandler;
+    private KeyHandler keyHandler;
     Game game;
     private Screen screen;
     
@@ -46,8 +48,11 @@ public class Engine extends Canvas implements Runnable{
         frame = new JFrame();
 
         this.inputHandler = new InputHandler();
+        this.keyHandler = new KeyHandler();
+
         this.addMouseListener(this.inputHandler);
         this.addMouseMotionListener(this.inputHandler);
+        this.addKeyListener(this.keyHandler);
 
         frame.setResizable(false);
         frame.setTitle("TestBench");
@@ -84,9 +89,13 @@ public class Engine extends Canvas implements Runnable{
 
         // Main game loop
         while(running){
+            long beginTime = System.currentTimeMillis();
             game.update();
             game.composeFrame();
             render();
+
+            long timeTaken = System.currentTimeMillis() - beginTime;
+
         }
     }
 
@@ -109,27 +118,27 @@ public class Engine extends Canvas implements Runnable{
         Font myFont =  new java.awt.Font("MONOSPACED", Font.PLAIN,24);
         g.setFont(myFont);
 
-        try{        
-            PointerInfo mi = java.awt.MouseInfo.getPointerInfo();
-            GraphicsDevice gd = mi.getDevice();
-            double mouse_x = frame.getMousePosition().x;
-            double mouse_y = frame.getMousePosition().y;
-            double width = gd.getDefaultConfiguration().getBounds().getWidth();
-            double height = gd.getDefaultConfiguration().getBounds().getHeight();
+        // try{        
+        //     PointerInfo mi = java.awt.MouseInfo.getPointerInfo();
+        //     GraphicsDevice gd = mi.getDevice();
+        //     double mouse_x = frame.getMousePosition().x;
+        //     double mouse_y = frame.getMousePosition().y;
+        //     double width = gd.getDefaultConfiguration().getBounds().getWidth();
+        //     double height = gd.getDefaultConfiguration().getBounds().getHeight();
 
-            String mouseLocation = 
-            "mouse_x: " + mouse_x + " " + 
-            "mouse_y: " + mouse_y + " " + 
-            "screen_width: "+ width + " " +
-            "screen_height: "+ height + " "+
-            "mouse_buttons: "+ java.awt.MouseInfo.getNumberOfButtons();
+        //     String mouseLocation = 
+        //     "mouse_x: " + mouse_x + " " + 
+        //     "mouse_y: " + mouse_y + " " + 
+        //     "screen_width: "+ width + " " +
+        //     "screen_height: "+ height + " "+
+        //     "mouse_buttons: "+ java.awt.MouseInfo.getNumberOfButtons();
 
-            g.drawString(mouseLocation, 50, 50);
-            //System.out.println(mouseLocation);
+        //     g.drawString(mouseLocation, 50, 50);
+        //     //System.out.println(mouseLocation);
 
-        }catch(Exception e){
-           //System.out.println(e);
-        }
+        // }catch(Exception e){
+        //    //System.out.println(e);
+        // }
 
 
         

@@ -126,11 +126,22 @@ public class Screen {
 
     public void putPixel(int x, int y, int r, int g, int b){
 
-        int number = r<< 8;
-        number = number + g << 8;
-        number = number + b;
-        pixels[x + y * width] =  number;
+        if(x<0 || x >= width){
+            return;
+        }
 
+        if(y<0 || y >= height ){
+            return;
+        }
+
+        try{
+            int number = r<< 8;
+            number = number + g << 8;
+            number = number + b;
+            pixels[x + y * width] =  number;
+        }catch(Exception e){
+            System.out.println(e);
+        }
     }
 
     public void putPixel(int x, int y, Color c) {

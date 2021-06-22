@@ -3,7 +3,7 @@ import graphics.Screen;
 import graphics.Vec2;
 import graphics.Color;
 
-public class PixelUnit {
+public class PixelUnit implements GameObject {
 
     private Screen screen;
 
@@ -37,22 +37,25 @@ public class PixelUnit {
         posY = newPos.y;
     }
 
-    public void update(){
-
+    @Override
+    public void update() {
         this.posX += vx;
         this.posY += vy;
+        
 
         if(this.posX>screen.width){
             this.vx = this.vx*-1;
             while(this.posX>screen.width){
                 this.posX= this.posX+vx*2;
             }
+            this.color.b = (int) ((int)255*Math.random());
         }
         if(this.posX<0){
             this.vx = this.vx*-1;
             while(this.posX<0){
                 this.posX= this.posX+vx*2;
             }
+            this.color.b = (int) ((int)255*Math.random());
         }
 
 
@@ -60,16 +63,19 @@ public class PixelUnit {
         if(this.posY>=screen.height-1){
             vy = -vy;
             this.posY= this.posY+vy*2;
+            this.color.g = (int) ((int)255*Math.random());
         }
         if(this.posY<0){
             vy = -vy;
             this.posY = this.posY+vy*2;
+            this.color.r = (int) ((int)255*Math.random());
         }
-
+        
 
     }
 
-    public void compose(){
+    @Override
+    public void compose() {
         screen.putPixel((int)this.posX, (int)this.posY,this.color.r, this.color.g, this.color.b);
     }
 

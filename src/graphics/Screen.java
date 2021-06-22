@@ -1,5 +1,6 @@
 package graphics;
 
+import java.util.ArrayList;
 
 public class Screen {
 
@@ -107,6 +108,14 @@ public class Screen {
         }
     }
 
+    public void drawRect(int x0, int y0, int x, int y, Color c){
+        for(int i = x0;i< x;i++){
+            for(int j = y0;j< y;j++){
+                putPixel(i,j,c.r,c.g,c.b);
+            }
+        }
+    }
+
     public void putPixel(Vec2 point, int r, int g, int b){
         putPixel((int)point.x,(int)point.y,r,g,b);
     }
@@ -122,7 +131,46 @@ public class Screen {
 
     public void putPixel(int x, int y, Color c) {
         putPixel(x,y,c.r,c.g,c.b);
+    }   
+
+    public void putHexagon(Vec2 center, int size, Color c){
+        
+
+        Color red = new Color("Red", 255,0,0);
+        Color green = new Color("Green", 0,255,0);
+        Color blue = new Color("Blue", 0,0,255);
+
+        ArrayList<Vec2> verticies = new ArrayList();
+        for(int i = 0;i<6;i++){
+            plotLine(
+                (int)center.x, 
+                (int)center.y, 
+                (int)(center.x+ (size *  Math.cos(Math.PI/3*i))), 
+                (int)(center.y+ (size *  Math.sin(Math.PI/3*i))), 
+                c);
+            verticies.add(
+                new Vec2(
+                center.x+ (size *  Math.cos(Math.PI/3*i)),
+                center.y+ (size *  Math.sin(Math.PI/3*i)))
+                );
+        }
+        verticies.add(
+            new Vec2(
+            center.x+ (size ),
+            center.y+ (Math.sin(Math.PI/3)))
+            );
+
+        for(int i = 0;i< 6;i++){
+            plotLine(
+                (int)verticies.get(i).x,
+                (int)verticies.get(i).y,
+                (int)(verticies.get(i+1).x),
+                (int)(verticies.get(i+1).y),
+                 c);
+        }
+
     }
 
-    
+
+
 }

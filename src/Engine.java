@@ -15,9 +15,9 @@ import java.io.IOException;
 
 public class Engine extends Canvas implements Runnable{
 
-    public static int width = 600;
-    public static int height = width / 16 * 9;
-    public static int scale = 3;
+    public static int width = 1920;
+    public static int height = 1080;
+    public static int scale = 1;
 
     private Thread thread;
     public JFrame frame;
@@ -27,7 +27,6 @@ public class Engine extends Canvas implements Runnable{
     Game game;
     private Screen screen;
     
-
     private BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
     private BufferedImage image2 = ImageLoader.loadImage("Doggie.png");
     private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
@@ -39,6 +38,7 @@ public class Engine extends Canvas implements Runnable{
     }
 
     public Engine(){
+
         Dimension size = new Dimension(width*scale,height*scale);
         setPreferredSize(size);
 
@@ -113,7 +113,7 @@ public class Engine extends Canvas implements Runnable{
             PointerInfo mi = java.awt.MouseInfo.getPointerInfo();
             GraphicsDevice gd = mi.getDevice();
             double mouse_x = frame.getMousePosition().x;
-            double mouse_y = frame.getMousePosition().x;
+            double mouse_y = frame.getMousePosition().y;
             double width = gd.getDefaultConfiguration().getBounds().getWidth();
             double height = gd.getDefaultConfiguration().getBounds().getHeight();
 

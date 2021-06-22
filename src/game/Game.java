@@ -4,6 +4,10 @@ package game;
 import graphics.Color;
 import graphics.Screen;
 import graphics.Vec2;
+import graphics.hex.Hex;
+import graphics.hex.Layout;
+import graphics.hex.Orientation;
+import graphics.hex.Point;
 import input.InputEvent;
 import input.InputHandler;
 
@@ -20,11 +24,35 @@ public class Game {
     private Stack<InputEvent> eventQue;
     private ArrayList<GameObject> gameObjects;
 
+    // Hex grid system
+    private Orientation orientation;
+    private Point size;
+    private Point origin;
+    private Layout layout;
+    private ArrayList<Hex> hexs;
+
     public Game(Screen screen, InputHandler inputHandler){
         //store the pixel array
         this.screen = screen;
         this.eventQue = inputHandler.eventQue;
         gameObjects = new ArrayList<>();
+
+        //grid setup
+        
+        this.orientation = Orientation.layoutPointy();
+        this.size = new Point(50.0,50.0);
+        this.origin = new Point(screen.width/2.0,screen.height/2.0);
+        this.layout = new Layout(orientation,size,origin);
+
+        this.hexs = new ArrayList();
+        for(int i = -3;i<= 3;i++){
+            for(int j = -3;j<= 3;j++){
+                for(int k = -3;k<= 3;k++){
+                    Hex hex = new Hex(i,j,k);
+                    this.hexs.add(hex);
+                }
+            }
+        }
     }
     public void init(){
         //create some unit objects and sdtore them into an array
@@ -75,9 +103,15 @@ public class Game {
     }
 
     public void composeFrame(){
-        System.out.println("CurrentEvents: " + this.eventQue.size());
+        //System.out.println("CurrentEvents: " + this.eventQue.size());
 
         screen.clearFrame();
+
+        Color red = new Color("Red", 255,0,0);
+        this.hexs.forEach((hex)->{
+            screen.putHexagon(hex, layout, origin, size, red);
+        });
+
         for(GameObject u: gameObjects){
             u.compose();
         }

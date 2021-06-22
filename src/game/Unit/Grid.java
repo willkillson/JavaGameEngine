@@ -48,20 +48,18 @@ public class Grid implements GameObject {
     //   screen.plotLine(columnPos*i, 0, columnPos*i, this.height, gray);
     // }
 
-    int size = 100;
+    // int size = 100;
   
-    Vec2 center1 = new Vec2(200 , 200 );
-    Vec2 center2 = new Vec2(200+ size +size/2, 200+ Math.sqrt(3)*size/2 );
-    Vec2 center3 = new Vec2(200  , 200 + Math.sqrt(3)*size);
+    // Vec2 center1 = new Vec2(200 , 200 );
+    // Vec2 center2 = new Vec2(200+ size +size/2, 200+ Math.sqrt(3)*size/2 );
+    // Vec2 center3 = new Vec2(200  , 200 + Math.sqrt(3)*size);
 
-    Color red = new Color("Red", 255,0,0);
-    Color green = new Color("Green", 0,255,0);
-    Color gray = new Color("Gray", 192,192,192);
-    Color blue = new Color("Blue", 0,0,255);
+    // Color red = new Color("Red", 255,0,0);
+    // Color green = new Color("Green", 0,255,0);
+    // Color gray = new Color("Gray", 192,192,192);
+    // Color blue = new Color("Blue", 0,0,255);
 
-    screen.putHexagon(center1, size, red);
-    screen.putHexagon(center2, size, gray);
-    screen.putHexagon(center3, size, green);
+
 
   }
 }

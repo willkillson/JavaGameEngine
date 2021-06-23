@@ -22,7 +22,7 @@ public class Layout {
     return new Point(x + origin.x, y + origin.y);
   }
 
-  FractionalHex pixelToHex(Point p){
+  public FractionalHex pixelToHex(Point p){
     Point pt = new Point(
       (p.x - origin.x) / size.x,
       (p.y - origin.y) /size.y);
@@ -30,6 +30,25 @@ public class Layout {
     double q = orientation.b0 * pt.x + orientation.b1 * pt.y;
     double r = orientation.b2 * pt.x + orientation.b3 * pt.y;  
     return new FractionalHex(q, r, -q-r);
+  }
+
+  public Hex hexRound(FractionalHex h){
+    int q = (int) (Math.round(h.q));
+    int r = (int) (Math.round(h.r));
+    int s = (int) (Math.round(h.s));
+
+    double q_diff = Math.abs(q-h.q);
+    double r_diff = Math.abs(r-h.r);
+    double s_diff = Math.abs(s-h.s);
+
+    if(q_diff> r_diff && q_diff > s_diff){
+      q = -r-s;
+    }else if (r_diff> s_diff){
+      r = -q-s;
+    }else{
+      s = -q -r;
+    }
+    return new Hex(q,r,s);
   }
 
   private Point hexCornerOffset(int corner){

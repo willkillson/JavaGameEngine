@@ -4,6 +4,7 @@ package game;
 import graphics.Color;
 import graphics.Screen;
 import graphics.Vec2;
+import graphics.hex.FractionalHex;
 import graphics.hex.Hex;
 import graphics.hex.Layout;
 import graphics.hex.Orientation;
@@ -31,10 +32,10 @@ public class Game {
     private Layout layout;
     private ArrayList<Hex> hexs;
 
-    public Game(Screen screen, InputHandler inputHandler){
+    public Game(Screen screen, Stack<InputEvent> eventQue){
         //store the pixel array
         this.screen = screen;
-        this.eventQue = inputHandler.eventQue;
+        this.eventQue = eventQue;
         gameObjects = new ArrayList<>();
 
     }
@@ -43,22 +44,15 @@ public class Game {
         //grid setup
         
         this.orientation = Orientation.layoutPointy();
-        this.size = new Point(5.0,5.0);
+        this.size = new Point(100.100,100.0);
         this.origin = new Point(screen.width/2.0,screen.height/2.0);
         this.layout = new Layout(orientation,size,origin);
 
         this.hexs = new ArrayList();
-        for(int i = -3;i<= 3;i++){
-            for(int j = -3;j<= 3;j++){
-                for(int k = -3;k<= 3;k++){
-                    Hex hex = new Hex(i,j,k);
-                    this.hexs.add(hex);
-                }
-            }
-        }
+
 
         //create some unit objects and sdtore them into an array
-        for(int i = 0;i< 100;i++){
+        for(int i = 0;i< 5;i++){
             gameObjects.add(
                 new PixelUnit(screen,new Vec2(screen.width*Math.random(),screen.height*Math.random()), 
                 new Vec2(1*Math.random(),10*Math.random()), 
@@ -88,15 +82,47 @@ public class Game {
     
                 switch(event.name){
                     case "mousePressed":
-                        Vec2 newPos = getScreenCordinates(new Vec2(event.position_x,event.position_y));
-                        System.out.println("mousePressed: "+newPos.x + " : "+newPos.y);
-                        this.origin = new Point(newPos.x, newPos.y);
-                        this.layout = new Layout(orientation,size,origin);
-                    break;
+                        if(event.keyText.compareTo("1")==0){
+                            //left click
+                            Vec2 newPos = getScreenCordinates(new Vec2(event.position_x,event.position_y));
+                            //System.out.println("mousePressed: "+newPos.x + " : "+newPos.y);
+                            FractionalHex fHex = this.layout.pixelToHex(new Point(newPos.x, newPos.y));
+                            //System.out.println("fHex: q "+ (int)Math.floor(fHex.q) + " r "+(int)Math.floor(fHex.r)+" s "+(int)Math.floor(fHex.s));
+                            Hex roundedHex = layout.hexRound(fHex);
+                            this.hexs.add(roundedHex);
+                        }else if(event.keyText.compareTo("3")==0){
+                            //right click
+                            Vec2 newPos = getScreenCordinates(new Vec2(event.position_x,event.position_y));
+                            //System.out.println("mousePressed: "+newPos.x + " : "+newPos.y);
+                            FractionalHex fHex = this.layout.pixelToHex(new Point(newPos.x, newPos.y));
+                            //System.out.println("fHex: q "+ (int)Math.floor(fHex.q) + " r "+(int)Math.floor(fHex.r)+" s "+(int)Math.floor(fHex.s));
+                            Hex roundedHex = layout.hexRound(fHex);
+                            this.hexs.removeIf((hex)->{
+                                return hex.equals(roundedHex);
+                            });
+                        } 
+                        break;
                     case "mouseReleased":
-                    break;
+                        break;
+                    case "keyPressed":
+                        if(event.keyText=="NumPad +"){
+                            this.size = new Point(this.size.x +1, this.size.y +1);
+                        }
+                        if(event.keyText=="NumPad -"){
+                            this.size = new Point(this.size.x -1, this.size.y -1);
+                        }
+                        if(event.keyText.compareTo("NumPad-9")==0){
+                            this.orientation = Orientation.layoutPointy();
+                            this.layout = new Layout(orientation,size,origin);
+                        }
+                        if(event.keyText.compareTo("NumPad-8")==0){
+                            this.orientation = Orientation.layoutFlat();
+                            this.layout = new Layout(orientation,size,origin);
+                        }
+                        break;
                 }
             }
+            this.layout = new Layout(orientation,size,origin);
         }else{
             for(GameObject u: gameObjects){
                 u.update();
@@ -111,7 +137,7 @@ public class Game {
 
         Color red = new Color("Red", 255,0,0);
         this.hexs.forEach((hex)->{
-            screen.putHexagon(hex, layout, origin, size, red);
+            screen.putHexagon(hex, layout, origin, size, new Color("random", (int)(255*Math.random()), (int)(255*Math.random()),(int)(255*Math.random())));
         });
 
         for(GameObject u: gameObjects){

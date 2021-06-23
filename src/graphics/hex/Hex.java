@@ -82,6 +82,15 @@ public class Hex {
     return this.add(this.hexDirection(direction));
   }
 
-  
+  // Overriding equals() to compare two Complex objects
+  @Override
+  public boolean equals(Object o) {
+    if(!(o instanceof Hex)){
+      return false;
+    }
+    Hex hex = (Hex)o;
+    return hex.q== this.q && hex.r == this.r && hex.s == this.s;
+  }
+    
 
 }

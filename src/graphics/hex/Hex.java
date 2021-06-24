@@ -1,7 +1,5 @@
 package graphics.hex;
 
-import java.util.ArrayList;
-
 public class Hex {
   private int q;
   private int r;

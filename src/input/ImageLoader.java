@@ -3,7 +3,6 @@ package input;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.awt.image.SampleModel;
 import java.io.File;
 import java.io.IOException;
 
@@ -42,9 +41,7 @@ public class ImageLoader {
   public static int[] getPixelArray(BufferedImage bi, int width, int height){
     
     int[] image3Pixels = ((DataBufferInt)bi.getRaster().getDataBuffer()).getData();
-    int[] pixelArray = new int[width*height];
-    SampleModel sm = bi.getSampleModel();
-    
+    int[] pixelArray = new int[width*height];  
     
     int skip_by = bi.getRaster().getHeight();
     int curHeight = 0;

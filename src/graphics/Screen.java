@@ -1,8 +1,6 @@
 package graphics;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-
 import graphics.hex.Hex;
 import graphics.hex.Layout;
 import graphics.hex.Point;
@@ -171,7 +169,32 @@ public class Screen {
             if(i% width==0){
                 if(height<arrayHeight){ 
                     for(int k = 0;k< arrayWidth;k++){
-                        this.pixels[i+k+x_pos] =  sourcePixels[k+height*arrayWidth];
+                        if(sourcePixels[k+height*arrayWidth]!=0)
+                             this.pixels[i+k+x_pos] =  sourcePixels[k+height*arrayWidth];
+                    }
+                }
+                height++;
+                i= i+arrayWidth;
+            }
+        }
+    }
+
+    public void movePixels(int[] sourcePixels,int[] destinationPixels, int x_pos, int y_pos, int arrayWidth, int arrayHeight){
+        int height = 0;
+        int width = 1920;
+        x_pos = x_pos -arrayWidth/2;
+        y_pos = y_pos - arrayHeight/2;
+        for(int i = x_pos + y_pos * width;i<destinationPixels.length;i++){
+            if(i% width==0){
+                if(height<arrayHeight){ 
+                    for(int k = 0;k< arrayWidth;k++){
+                        try{
+                            if(sourcePixels[k+height*arrayWidth]!=0)
+                            destinationPixels[i+k+x_pos] =  sourcePixels[k+height*arrayWidth];
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+             
                     }
                 }
                 height++;

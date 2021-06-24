@@ -3,7 +3,7 @@ import graphics.Screen;
 import graphics.Vec2;
 import graphics.Color;
 
-public class PixelUnit implements GameObject {
+public class PixelUnit extends GameObject {
 
     private Screen screen;
 
@@ -78,5 +78,12 @@ public class PixelUnit implements GameObject {
     public void compose() {
         screen.putPixel((int)this.posX, (int)this.posY,this.color.r, this.color.g, this.color.b);
     }
+
+    @Override
+    public int getDrawPriority() {
+        return 1;
+    }
+
+
 
 }

@@ -20,7 +20,7 @@ public class KeyHandler implements KeyListener{
   @Override
   public void keyPressed(KeyEvent e) {
     //System.out.println(e);
-    this.eventQue.add(new InputEvent("keyPressed", e.getKeyText(e.getKeyCode())));
+    this.eventQue.add(new InputEvent("keyPressed", KeyEvent.getKeyText(e.getKeyCode())));
   }
 
   @Override

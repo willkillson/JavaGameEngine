@@ -16,7 +16,7 @@ public class Layout {
     this.origin = origin;
   }
 
-  Point hexToPixel(Hex h){
+  public Point hexToPixel(Hex h){
     double x = (orientation.f0 * h.getQ() + orientation.f1 * h.getR() ) *this.size.x;
     double y = (orientation.f2 * h.getQ() + orientation.f3 * h.getR() ) *this.size.y;
     return new Point(x + origin.x, y + origin.y);
@@ -57,7 +57,7 @@ public class Layout {
   }
 
   public ArrayList<Point> polygonCorners(Hex h){
-    ArrayList<Point> corners = new ArrayList();
+    ArrayList<Point> corners = new ArrayList<Point>();
     Point center = hexToPixel(h);
     for(int i = 0;i<6;i++){
       Point offset = hexCornerOffset(i);

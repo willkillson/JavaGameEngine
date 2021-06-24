@@ -1,5 +1,6 @@
 package graphics;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import graphics.hex.Hex;
@@ -10,7 +11,7 @@ public class Screen {
 
     public int width;
     public int height;
-    public int[] pixels;
+    public int[]pixels;
 
     public Screen(int width, int height){
         this.width = width;
@@ -161,6 +162,22 @@ public class Screen {
         }
     }
 
-
+    public void movePixels(int[] sourcePixels,int x_pos, int y_pos, int arrayWidth, int arrayHeight){
+        int height = 0;
+        int width = 1920;
+        x_pos = x_pos -arrayWidth/2;
+        y_pos = y_pos - arrayHeight/2;
+        for(int i = x_pos + y_pos * width;i<this.pixels.length;i++){
+            if(i% width==0){
+                if(height<arrayHeight){ 
+                    for(int k = 0;k< arrayWidth;k++){
+                        this.pixels[i+k+x_pos] =  sourcePixels[k+height*arrayWidth];
+                    }
+                }
+                height++;
+                i= i+arrayWidth;
+            }
+        }
+    }
 
 }

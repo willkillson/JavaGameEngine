@@ -3,16 +3,12 @@ import graphics.Screen;
 import input.InputEvent;
 import input.KeyHandler;
 import input.MouseHandler;
-
-import javax.imageio.ImageIO;
+import input.ImageLoader;
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.io.File;
-import java.io.IOException;
 import java.util.Stack;
 
 public class Engine extends Canvas implements Runnable{
@@ -34,19 +30,12 @@ public class Engine extends Canvas implements Runnable{
     
     private BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
 
-
     //private BufferedImage image2 = ImageLoader.loadImage("Doggie.png");
     private BufferedImage image3 = ImageLoader.loadImage("./assets/hex_tiles/water_hex_tile.png");
-
-    
-
-
     private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 
     public static void main(String[] args) {
-
         new Engine();
-
     }
 
     public Engine(){
@@ -110,6 +99,8 @@ public class Engine extends Canvas implements Runnable{
         }
     }
 
+
+
     public void render(){
         BufferStrategy bs = getBufferStrategy();
         if(bs==null){
@@ -117,46 +108,23 @@ public class Engine extends Canvas implements Runnable{
             return;
         }
 
+        int iWidth = 102;
+        int iHeight = 102;
 
-        BufferedImage resizedImage3 = ImageLoader.resizeImage(image3, 10, 10);
-        int[] image3Pixels = ((DataBufferInt)resizedImage3.getRaster().getDataBuffer()).getData();
+        BufferedImage resizedImage3 = ImageLoader.resizeImage(image3, iWidth, iHeight);
+        int[] pixelArray = ImageLoader.getPixelArray(resizedImage3, iWidth, iHeight);
 
-        int position_x = screen.width;
-        int position_y = screen.height;
-        
+        screen.movePixels(pixelArray,screen.width/2,screen.height/2,iWidth,iHeight);
 
-        int height = 0;
-        int number = 255 << 8;
-        number = number + 255 << 8;
-        number = number + 255;
+
+        // Copy all our screen pixels into our pixels buffer
         for(int i = 0;i<pixels.length;i++){
-            if(i% width==0){
-                height++;
-                for(int k = 0;k< 100;k++){
-                    pixels[i+k] =  number;
-                }
-                i= i+100;
-            }else{
-                pixels[i] = screen.pixels[i];
-            }
-            
-            //pixels[i] = number;
+            pixels[i] = screen.pixels[i];
         }
-        
 
         Graphics g = bs.getDrawGraphics();
         
         g.drawImage(image, 0,0,getWidth(),getHeight(), null);
-        //g.drawImage(image3, 0,0,image3.getWidth(),image3.getHeight(), null);
-
-
-
-
-       
-
-
-
-        g.drawImage(resizedImage3, 0,0,resizedImage3.getWidth(),resizedImage3.getHeight(), null);
         Font myFont =  new java.awt.Font("MONOSPACED", Font.PLAIN,24);
         g.setFont(myFont);
 
@@ -182,42 +150,7 @@ public class Engine extends Canvas implements Runnable{
         //    //System.out.println(e);
         // }
 
-
-        
-        
         g.dispose();
         bs.show();
-
     }
-
-    private static final class ImageLoader{
-
-        static BufferedImage loadImage(String fileName)
-        {
-            BufferedImage bi = null;
-            try {
-                bi = ImageIO.read(new File(fileName));
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("Image could not be read");
-                System.exit(1);
-            }
-            return bi;
-        }
-        
-        static BufferedImage resizeImage(BufferedImage originial, int width, int height){
-            BufferedImage resizedImage = null;
-            try {
-                resizedImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D graphics2D = resizedImage.createGraphics();
-                graphics2D.drawImage(originial, 0, 0, width, height, null);
-                graphics2D.dispose();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return resizedImage;
-        }
-        
-    }
-
 }

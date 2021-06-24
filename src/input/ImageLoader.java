@@ -21,13 +21,15 @@ public class ImageLoader {
           System.out.println("Image could not be read");
           System.exit(1);
       }
+
+      
       return bi;
   }
   
   public static BufferedImage resizeImage(BufferedImage originial, int width, int height){
       BufferedImage resizedImage = null;
       try {
-          resizedImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+          resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
           Graphics2D graphics2D = resizedImage.createGraphics();
           graphics2D.drawImage(originial, 0, 0, width, height, null);
           graphics2D.dispose();

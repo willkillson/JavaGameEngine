@@ -137,7 +137,7 @@ public class Game {
 
         Color red = new Color("Red", 255,0,0);
         this.hexs.forEach((hex)->{
-            screen.putHexagon(hex, layout, origin, size, new Color("random", (int)(255*Math.random()), (int)(255*Math.random()),(int)(255*Math.random())));
+            screen.putHexagon(hex, layout, origin, size, red);
         });
 
         for(GameObject u: gameObjects){

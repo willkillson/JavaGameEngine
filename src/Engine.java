@@ -31,7 +31,8 @@ public class Engine extends Canvas implements Runnable{
     private BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
 
     //private BufferedImage image2 = ImageLoader.loadImage("Doggie.png");
-    private BufferedImage image3 = ImageLoader.loadImage("./assets/hex_tiles/water_hex_tile.png");
+    private BufferedImage image3 = ImageLoader.loadImage("./assets/hex_tiles/water_hex_tile_1000.png");
+    
     private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 
     public static void main(String[] args) {
@@ -108,13 +109,15 @@ public class Engine extends Canvas implements Runnable{
             return;
         }
 
-        int iWidth = 102;
-        int iHeight = 102;
+        int iWidth = image3.getWidth()/10;
+        int iHeight = image3.getHeight()/10;
 
+        //BufferedImage resizedImage3 = ImageLoader.resizeImage(image3, iWidth, iHeight);
+        //int[] pixelArray = ImageLoader.getPixelArray(image3, image3.getWidth(), image3.getHeight());
         BufferedImage resizedImage3 = ImageLoader.resizeImage(image3, iWidth, iHeight);
-        int[] pixelArray = ImageLoader.getPixelArray(resizedImage3, iWidth, iHeight);
+        int[] pixelArray = resizedImage3.getRGB(0, 0, resizedImage3.getWidth(), resizedImage3.getHeight(), null, 0, resizedImage3.getWidth());
 
-        screen.movePixels(pixelArray,screen.width/2,screen.height/2,iWidth,iHeight);
+        screen.movePixels(pixelArray,screen.width/2,screen.height/2,resizedImage3.getWidth(),resizedImage3.getHeight());
 
 
         // Copy all our screen pixels into our pixels buffer

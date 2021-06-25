@@ -38,10 +38,10 @@ public class WorldHexGrid implements GameObject {
   private boolean redraw; // Used for determining if the grid needs to be redrawn.
   private boolean reCalculate;  // Used if the origin/layout/size changes
   private int[] gridPixelArray;
-  private BufferedImage bi_water_tile_1000 = ImageLoader.loadImage("./assets/hex_tiles/water_hex_tile_1000.png");
-  private BufferedImage bi_plains_tile_1000 = ImageLoader.loadImage("./assets/hex_tiles/plains_hex_tile_1000.png");
-  private BufferedImage bi_empty_tile_1000 = ImageLoader.loadImage("./assets/hex_tiles/empty_hex_tile_1000.png");
-  private BufferedImage bi_player_yellow_hex_1000 = ImageLoader.loadImage("./assets/hex_tiles/player_yellow_hex.png");
+  private BufferedImage bi_water_tile_1000 = ImageLoader.loadImage("./assets/hex_tiles/png/water_hex_tile_1000.png");
+  private BufferedImage bi_plains_tile_1000 = ImageLoader.loadImage("./assets/hex_tiles/png/plains_hex_tile_1000.png");
+  private BufferedImage bi_empty_tile_1000 = ImageLoader.loadImage("./assets/hex_tiles/png/empty_hex_tile_1000.png");
+  private BufferedImage bi_player_yellow_hex_1000 = ImageLoader.loadImage("./assets/hex_tiles/png/player_yellow_hex.png");
 
   public WorldHexGrid(Screen screen){
     this.screen = screen;

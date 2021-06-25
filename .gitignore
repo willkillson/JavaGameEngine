@@ -4,6 +4,7 @@
 # Pictures
 *.png
 *.xcf
+*.svg
 
 # Log file
 *.log

@@ -1,10 +1,4 @@
 package graphics;
-
-import java.util.ArrayList;
-import graphics.hex.Hex;
-import graphics.hex.Layout;
-import graphics.hex.Point;
-
 public class Screen {
 
     public int width;
@@ -147,18 +141,18 @@ public class Screen {
         putPixel(x,y,c.r,c.g,c.b);
     }   
 
-    public void putHexagon(Hex hex, Layout layout, Point origin, Point size, Color c){
-        ArrayList<Point> corners = layout.polygonCorners(hex);
-        corners.add(corners.get(0));
-        for(int i = 0;i< 6;i++){
-            this.plotLine(
-                (int)corners.get(i).x,
-                (int)corners.get(i).y,
-                (int)(corners.get(i+1).x),
-                (int)(corners.get(i+1).y),
-                c);
-        }
-    }
+    // public void putHexagon(Hex hex, Layout layout, Point origin, Point size, Color c){
+    //     ArrayList<Point> corners = layout.polygonCorners(hex);
+    //     corners.add(corners.get(0));
+    //     for(int i = 0;i< 6;i++){
+    //         this.plotLine(
+    //             (int)corners.get(i).x,
+    //             (int)corners.get(i).y,
+    //             (int)(corners.get(i+1).x),
+    //             (int)(corners.get(i+1).y),
+    //             c);
+    //     }
+    // }
 
     public void movePixels(int[] sourcePixels,int x_pos, int y_pos, int arrayWidth, int arrayHeight){
         int height = 0;
@@ -207,6 +201,44 @@ public class Screen {
                 i= i+arrayWidth;
             }
         }
+    }
+
+    public int[] blendBuffers(int[] pixelBuffer1, int[] pixelBuffer2, double ratioPixelBuffer1, double ratioPixelBuffer2){
+        int blueMask = 0xFF0000;
+        int greenMask = 0xFF00;
+        int redMask = 0xFF;
+        
+        int[] blendedPixelBuffer = new int[pixelBuffer1.length];
+        for(int i = 0;i< pixelBuffer1.length;i++){
+            
+            int r1 = pixelBuffer1[i]&redMask;
+            int r2 = pixelBuffer2[i]&redMask;
+
+            int g1 = pixelBuffer1[i]&greenMask;
+            int g2 = pixelBuffer2[i]&greenMask;
+
+            int b1 = pixelBuffer1[i]&blueMask;
+            int b2 = pixelBuffer2[i]&blueMask;
+
+            int final_r = (int)(ratioPixelBuffer1*r1 + ratioPixelBuffer2*r2);
+            if(final_r>redMask)
+                final_r = redMask;
+
+            int final_g = (int)(ratioPixelBuffer1*g1 + ratioPixelBuffer2*g2);
+            if(final_g>greenMask)
+                final_g = greenMask;
+
+            int final_b = (int)(ratioPixelBuffer1*b1 + ratioPixelBuffer2*b2);
+            if(final_b>blueMask)
+                final_b = blueMask;
+
+            int number = final_r << 8;
+            number = number + final_g << 8;
+            number = number + final_b;
+            blendedPixelBuffer[i] = number;
+
+        }
+        return blendedPixelBuffer;
     }
 
 }

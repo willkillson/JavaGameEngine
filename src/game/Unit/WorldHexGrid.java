@@ -41,6 +41,7 @@ public class WorldHexGrid implements GameObject {
   private BufferedImage bi_water_tile_1000 = ImageLoader.loadImage("./assets/hex_tiles/water_hex_tile_1000.png");
   private BufferedImage bi_plains_tile_1000 = ImageLoader.loadImage("./assets/hex_tiles/plains_hex_tile_1000.png");
   private BufferedImage bi_empty_tile_1000 = ImageLoader.loadImage("./assets/hex_tiles/empty_hex_tile_1000.png");
+  private BufferedImage bi_player_yellow_hex_1000 = ImageLoader.loadImage("./assets/hex_tiles/player_yellow_hex.png");
 
   public WorldHexGrid(Screen screen){
     this.screen = screen;
@@ -185,9 +186,19 @@ public class WorldHexGrid implements GameObject {
       BufferedImage re_plains_hex = ImageLoader.resizeImage(bi_plains_tile_1000, iWidth, iHeight);
       BufferedImage re_empty_hex = ImageLoader.resizeImage(bi_empty_tile_1000, iWidth, iHeight);
 
+      //highlight
+      BufferedImage re_player_yellow_hex = ImageLoader.resizeImage(bi_player_yellow_hex_1000, iWidth, iHeight);
+      int[] re_player_yellow_hex_pixelArray = re_player_yellow_hex.getRGB(0, 0, re_player_yellow_hex.getWidth(), re_player_yellow_hex.getHeight(), null, 0, re_player_yellow_hex.getWidth());
+
+
       int[] re_water_hex_pixelArray = re_water_hex.getRGB(0, 0, re_water_hex.getWidth(), re_water_hex.getHeight(), null, 0, re_water_hex.getWidth());
       int[] re_plains_hex_pixelArray = re_plains_hex.getRGB(0, 0, re_plains_hex.getWidth(), re_plains_hex.getHeight(), null, 0, re_plains_hex.getWidth());
       int[] re_empty_hex_pixelArray = re_empty_hex.getRGB(0, 0, re_empty_hex.getWidth(), re_empty_hex.getHeight(), null, 0, re_empty_hex.getWidth());
+
+
+      int[] blendedWater = this.screen.blendBuffers(re_plains_hex_pixelArray, re_water_hex_pixelArray, 0.5, 0.5);
+
+      
 
       //// Red outline
       //Color red = new Color("Red", 255,0,0);
@@ -195,7 +206,7 @@ public class WorldHexGrid implements GameObject {
           Point point = layout.hexToPixel(hex);
           switch (hex.type){
             case "water_hex":{
-              screen.movePixels(re_water_hex_pixelArray,this.gridPixelArray,(int)point.x,(int)point.y,re_water_hex.getWidth(),re_water_hex.getHeight());
+              screen.movePixels(blendedWater,this.gridPixelArray,(int)point.x,(int)point.y,re_water_hex.getWidth(),re_water_hex.getHeight());
               break;
             }
             case "plains_hex":{

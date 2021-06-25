@@ -65,20 +65,9 @@ public class Engine extends Canvas implements Runnable{
         System.setErr( ps );
 
         ta.addKeyListener(new ConsoleHandler(inputEventQue));
-
-
         p.add(new JScrollPane(ta),BorderLayout.SOUTH);
-
         frame.add(p);
-
-
-        // TextAreaOutputStream taos = new TextAreaOutputStream( ta, 60 );
-        // PrintStream ps = new PrintStream( taos );
-        // System.setOut( ps );
-        // System.setErr( ps );
-        // frame.add( new JScrollPane( ta )  );
-
-
+        
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -105,18 +94,14 @@ public class Engine extends Canvas implements Runnable{
     @Override
     public void run() {
         game = new Game(screen, this.inputEventQue);
-
         game.init();
-
         // Main game loop
         while(running){
             //long beginTime = System.currentTimeMillis();
             game.update();
             game.composeFrame();
             render();
-
             //long timeTaken = System.currentTimeMillis() - beginTime;
-
         }
     }
 
@@ -126,16 +111,12 @@ public class Engine extends Canvas implements Runnable{
             createBufferStrategy(3);//triple buffering
             return;
         }
-
         // Copy all our screen pixels into our pixels buffer
         for(int i = 0;i<pixels.length;i++){
             pixels[i] = screen.pixels[i];
         }
-
         Graphics g = bs.getDrawGraphics();
         g.drawImage(image, 0,0,getWidth(),getHeight(), null);
-        Font myFont =  new java.awt.Font("MONOSPACED", Font.PLAIN,24);
-        g.setFont(myFont);
         g.dispose();
         bs.show();
     }

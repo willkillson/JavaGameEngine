@@ -61,7 +61,7 @@ public class Game {
                     case "mousePressed":
                         if(event.keyText.compareTo("1")==0){
                             //left click
-                            this.whg.createHex(new Point(event.position_x, event.position_y));
+                            this.whg.createHex(new Point(event.position_x, event.position_y),this.whg.selectedHexType);
                         }else if(event.keyText.compareTo("3")==0){
                             //right click
                             this.whg.deleteHex(new Point(event.position_x, event.position_y));
@@ -83,6 +83,18 @@ public class Game {
                             this.whg.changeOrientationFlat();
                         }
                         break;
+                    case "select":{
+                        this.whg.selectedHexType = event.keyText;
+                        break;
+                    }
+                    case "save":{
+                        this.whg.saveMap(event.keyText);
+                        break;
+                    }
+                    case "load":{
+                        this.whg.loadMap(event.keyText);
+                        break;
+                    }
                 }
             }
         }

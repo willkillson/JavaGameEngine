@@ -34,25 +34,40 @@ public class ConsoleHandler implements KeyListener{
   }
 
   private void processConsoleCommand(){
-    switch(input){
-        case "hello":{
-            System.out.println("---> Hello cutie! I hope your day is fine, because you are so fine!");
-            break;
-        }
+
+    String[] arrayStrings = input.split("\\.");
+    switch(arrayStrings[0]){
         case "help":{
           System.out.println("---> Example Commands:");
-          System.out.println("---> load water_hex");
-          System.out.println("---> load plains_hex");
+          System.out.println("---> select.water_hex");
+          System.out.println("---> select.plains_hex");
+          System.out.println("---> select.empty_hex");
+          System.out.println("---> map.load.map_name");
+          System.out.println("---> map.save.map_name");
           break;
         }
-        case "load water_hex":{
-            System.out.println("---> Loading water hex");
-            this.eventQue.add(new InputEvent("load", "water_hex"));
-            break;
+        case "map":{
+          if(arrayStrings.length == 3){
+            switch(arrayStrings[1]){
+              case "load":{
+                System.out.println("---> Loading map:" + arrayStrings[2]);
+                this.eventQue.add(new InputEvent("load", arrayStrings[2]));
+                break;
+              }
+              case "save":{
+                System.out.println("---> Saving map:" + arrayStrings[2]);
+                this.eventQue.add(new InputEvent("save", arrayStrings[2]));
+                break;
+              }
+            }
+          }
+          break;
         }
-        case "load plains_hex":{
-          System.out.println("---> Loading plains hex");
-          this.eventQue.add(new InputEvent("load", "plains_hex"));
+        case "select":{
+          if(arrayStrings.length == 2){
+            System.out.println("---> Selecting: "+arrayStrings[1]);
+            this.eventQue.add(new InputEvent("select", arrayStrings[1]));
+          }
           break;
         }
         default:{

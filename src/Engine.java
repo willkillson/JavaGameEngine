@@ -2,7 +2,6 @@ import game.Game;
 import graphics.Screen;
 import input.ConsoleHandler;
 import input.InputEvent;
-import java.awt.event.KeyEvent;
 import input.KeyHandler;
 import input.MouseHandler;
 import javax.swing.*;

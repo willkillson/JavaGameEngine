@@ -3,7 +3,7 @@ import graphics.Screen;
 import graphics.Vec2;
 import graphics.Color;
 
-public class PixelUnit extends GameObject {
+public class PixelUnit implements GameObject {
 
     private Screen screen;
 
@@ -82,6 +82,17 @@ public class PixelUnit extends GameObject {
     @Override
     public int getDrawPriority() {
         return 1;
+    }
+
+    @Override
+    public int compareTo(GameObject o) {
+        if(this.getDrawPriority()==o.getDrawPriority()){
+            return 0;
+          }else if(this.getDrawPriority()<o.getDrawPriority()){
+            return -1;
+          }else{
+            return 1;
+          }
     }
 
 

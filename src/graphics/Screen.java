@@ -139,7 +139,7 @@ public class Screen {
             number = number + b;
             pixels[x + y * width] =  number;
         }catch(Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -182,19 +182,25 @@ public class Screen {
     public void movePixels(int[] sourcePixels,int[] destinationPixels, int x_pos, int y_pos, int arrayWidth, int arrayHeight){
         int height = 0;
         int width = 1920;
-        x_pos = x_pos -arrayWidth/2;
-        y_pos = y_pos - arrayHeight/2;
-        for(int i = x_pos + y_pos * width;i<destinationPixels.length;i++){
+        int center_x_pos =  x_pos - arrayWidth/2;
+        int center_y_pos =  y_pos - arrayHeight/2;
+        for(int i = center_x_pos + center_y_pos * width;i<destinationPixels.length;i++){
             if(i% width==0){
                 if(height<arrayHeight){ 
-                    for(int k = 0;k< arrayWidth;k++){
+                    for(int k = 0;k< arrayWidth;k++){   // Loop f writing in the sourcePixels buffer to the destinationPixels buffer
                         try{
-                            if(sourcePixels[k+height*arrayWidth]!=0)
-                            destinationPixels[i+k+x_pos] =  sourcePixels[k+height*arrayWidth];
+                            if(sourcePixels[k+height*arrayWidth]!=0){ // Prevent writing in empty pixels/alphachannel
+                                if(i>0){    // Prevent writing in negative indexs;
+                                    if(k+center_x_pos>0){   // prevent wrap around left
+                                        if(k+center_x_pos<width){   // prevent wrap around right
+                                            destinationPixels[i+k+center_x_pos] = sourcePixels[k+height*arrayWidth];
+                                        }
+                                    }
+                                }
+                            }
                         }catch(Exception e){
                             e.printStackTrace();
                         }
-             
                     }
                 }
                 height++;

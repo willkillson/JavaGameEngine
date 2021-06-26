@@ -1,4 +1,4 @@
-package game.Unit;
+package game.entity;
 
 public interface GameObject extends Comparable<GameObject> {
 
@@ -7,5 +7,7 @@ public interface GameObject extends Comparable<GameObject> {
   public abstract void compose();
 
   public abstract int getDrawPriority();
+
+  public abstract boolean isDead();
   
 }

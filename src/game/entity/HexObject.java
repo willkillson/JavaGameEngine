@@ -1,14 +1,16 @@
-package game.Unit;
+package game.entity;
 
 import graphics.hex.Hex;
 
 public class HexObject extends Hex implements GameObject {
 
   public String type;
+  public boolean isDead;
 
   public HexObject(int q, int r, int s, String type) {
     super(q, r, s);
     this.type = type;
+    this.isDead = false;
     //TODO Auto-generated constructor stub
   }
 
@@ -43,5 +45,10 @@ public class HexObject extends Hex implements GameObject {
   @Override
   public int getDrawPriority() {
     return 0;
+  }
+
+  @Override
+  public boolean isDead() {
+    return this.isDead;
   }  
 }

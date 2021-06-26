@@ -26,6 +26,12 @@ public class Engine extends Canvas implements Runnable{
     private MouseHandler mouseHandler;
     private KeyHandler keyHandler;
 
+    //Game Time
+    private final double updateRate = 1.0d/60.0d;
+    private long nextStateTime;
+    private int fps;
+    private int ups;
+
     Game game;
     private Screen screen;
     private BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
@@ -76,7 +82,7 @@ public class Engine extends Canvas implements Runnable{
     }
 
     public synchronized void start(){
-        running = true;
+        
         thread = new Thread(this, "Display");
         thread.start();
     }
@@ -95,17 +101,45 @@ public class Engine extends Canvas implements Runnable{
     public void run() {
         game = new Game(screen, this.inputEventQue);
         game.init();
+        running = true;
+        double accumulator = 0;
+
+        long currentTime = System.currentTimeMillis();
+        long lastUpdate = currentTime;
+
         // Main game loop
         while(running){
-            //long beginTime = System.currentTimeMillis();
-            game.update();
-            game.composeFrame();
-            render();
-            //long timeTaken = System.currentTimeMillis() - beginTime;
+            currentTime = System.currentTimeMillis();
+            double lastRenderTimeInSeconds = (currentTime - lastUpdate)/ 1000d;
+            accumulator += lastRenderTimeInSeconds;
+            lastUpdate = currentTime;
+
+            if(accumulator >= updateRate){
+                while(accumulator>updateRate){
+                    game.update();
+                    accumulator-=updateRate;
+                    ups++;
+                }
+                game.composeFrame();
+                render();
+                printStats();
+            }
+
+
+        }
+    }
+
+    private void printStats(){
+        if(System.currentTimeMillis()>nextStateTime){
+            System.out.println(String.format("FPS: %d, UPS: %d", fps, ups));
+            fps = 0;
+            ups = 0;
+            nextStateTime = System.currentTimeMillis() + 1000;
         }
     }
 
     public void render(){
+        fps++;
         BufferStrategy bs = getBufferStrategy();
         if(bs==null){
             createBufferStrategy(3);//triple buffering

@@ -1,19 +1,15 @@
 package game;
 
-import graphics.Color;
 import graphics.Screen;
-import graphics.Vec2;
 import graphics.hex.Point;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
 
+import game.entity.GameObject;
+import game.entity.WorldHexGrid;
 import input.InputEvent;
-
-import game.Unit.GameObject;
-import game.Unit.WorldHexGrid;
-import game.Unit.PixelUnit;
 
 public class Game {
 
@@ -33,14 +29,6 @@ public class Game {
         //grid setup
         this.whg = new WorldHexGrid(screen);
         gameObjects.add(this.whg);
-        //create some flying pixel objects
-        for(int i = 0;i< 100000;i++){
-            gameObjects.add(
-                new PixelUnit(screen,new Vec2(screen.width*Math.random(),screen.height*Math.random()), 
-                new Vec2(1*Math.random(),10*Math.random()), 
-                new Color("RANDOM",(int)(255*Math.random()),(int)(255*Math.random()),(int)(255*Math.random())))
-            );
-        }
     }
 
     public void update(){
@@ -64,7 +52,7 @@ public class Game {
                             this.whg.createHex(new Point(event.position_x, event.position_y),this.whg.selectedHexType);
                         }else if(event.keyText.compareTo("3")==0){
                             //right click
-                            this.whg.deleteHex(new Point(event.position_x, event.position_y));
+                            this.whg.deleteHex(new Point(event.position_x, event.position_y),gameObjects);
                         } 
                         break;
                     case "mouseReleased":
@@ -104,7 +92,12 @@ public class Game {
 
         // Clear the screen buffer.
         screen.clearFrame();
-   
+
+        // Clear the dead units
+        gameObjects.removeIf((e)->{
+            return e.isDead();
+        });
+        
         // Sort the game objects so they render according to their priorities
         Collections.sort(this.gameObjects);
 

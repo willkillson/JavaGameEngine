@@ -1,21 +1,22 @@
-package game.Unit;
+package game.entity;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import graphics.Screen;
+import graphics.Vec2;
 import graphics.hex.FractionalHex;
 import graphics.hex.Hex;
 import graphics.hex.Layout;
 import graphics.hex.Orientation;
 import graphics.hex.Point;
-import input.ImageLoader;
 
 //https://github.com/stleary/JSON-java
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import game.SpriteManager;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -32,28 +33,104 @@ public class WorldHexGrid implements GameObject {
   private ArrayList<HexObject> hexs;
 
   public String selectedHexType;
+  private SpriteManager sm;
   
-
   // Graphics
   private boolean redraw; // Used for determining if the grid needs to be redrawn.
-  private boolean reCalculate;  // Used if the origin/layout/size changes
   private int[] gridPixelArray;
-  private BufferedImage bi_water_tile_1000 = ImageLoader.loadImage("./assets/hex_tiles/png/water_hex_tile_1000.png");
-  private BufferedImage bi_plains_tile_1000 = ImageLoader.loadImage("./assets/hex_tiles/png/plains_hex_tile_1000.png");
-  private BufferedImage bi_empty_tile_1000 = ImageLoader.loadImage("./assets/hex_tiles/png/empty_hex_tile_1000.png");
-  private BufferedImage bi_player_yellow_hex_1000 = ImageLoader.loadImage("./assets/hex_tiles/png/player_yellow_hex.png");
 
   public WorldHexGrid(Screen screen){
     this.screen = screen;
     this.orientation = Orientation.layoutPointy();
-    this.size = new Point(100.100,100.0);
+    this.size = new Point(35.0,35.);
     this.origin = new Point(screen.width/2.0,screen.height/2.0);
     this.layout = new Layout(orientation,size,origin);
     this.hexs = new ArrayList<HexObject>();
     this.redraw = true;
-    this.reCalculate = true;
-    this.gridPixelArray = new int[this.screen.height*this.screen.width];
+    this.gridPixelArray = new int[screen.height*screen.width];
     this.selectedHexType = "water_hex";
+    this.sm = new SpriteManager();
+  }
+
+  //sm.scaledPA
+
+  public void desintegrateHex(HexObject hex, ArrayList<GameObject> gameObjects){
+    Point point = layout.hexToPixel(hex);
+    this.helperDesintegrate(
+      sm.getScaledPA(hex.type), 
+      (int)point.x, 
+      (int)point.y,
+      sm.getWidth(hex.type), 
+      sm.getHeight(hex.type),
+      gameObjects);
+  }
+
+  public Point desintegrate1(int k, int arrayWidth, int height, int arrayHeight){
+    double randomx = 10;
+    double randomy = 10;
+    if((k<arrayWidth/2)){
+      randomx*= -1;
+    }
+    if((height<arrayHeight/2)){
+      randomy*= -1;
+    }
+    return new Point(randomx, randomy);
+  }
+
+  public Point desintegrate2(int k, int arrayWidth, int height, int arrayHeight){
+    double randomx = 3*Math.random()+1;
+    double randomy = 3*Math.random()+1;
+
+    if(Math.random()>0.5){
+      if((k<arrayWidth/2)){
+        randomx*= -1;
+      }
+    }
+    if(Math.random()>0.5){
+      if((height<arrayHeight/2)){
+        randomy*= -1;
+      }
+    }
+    return new Point(randomx, randomy);
+  }
+
+  public void helperDesintegrate(int[] sourcePixels, int x_pos, int y_pos, int arrayWidth, int arrayHeight, ArrayList<GameObject> gameObjects){
+    int height = 0;
+    int width = 1920;
+    int center_x_pos =  x_pos - arrayWidth/2;
+    int center_y_pos =  y_pos - arrayHeight/2;
+    for(int i = center_x_pos + center_y_pos * width;i<1920*1080;i++){
+        if(i% width==0){
+            if(height<arrayHeight){ 
+                for(int k = 0;k< arrayWidth;k++){   // Loop f writing in the sourcePixels buffer to the destinationPixels buffer
+                    try{
+                        if(sourcePixels[k+height*arrayWidth]!=0){ // Prevent writing in empty pixels/alphachannel
+                            if(i>0){    // Prevent writing in negative indexs;
+                                if(k+center_x_pos>0){   // prevent wrap around left
+                                    if(k+center_x_pos<width){   // prevent wrap around right
+                                      
+                                      // Corner desintegrate
+                                      //Point p = desintegrate1(k,arrayWidth, height, arrayHeight);
+                                      // PerPixel desintegrate
+                                      Point p = desintegrate2(k,arrayWidth, height, arrayHeight);
+                     
+                                      gameObjects.add(
+                                        new PixelUnit(screen,new Vec2(k+center_x_pos,height+center_y_pos), 
+                                        new Vec2(p.x,p.y), 
+                                        sourcePixels[k+height*arrayWidth]));
+                                    }
+                                }
+                            }
+                        }
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+            height++;
+            i= i+arrayWidth;
+        }
+    }
   }
 
   public void createHex(Point position, String type){
@@ -61,20 +138,40 @@ public class WorldHexGrid implements GameObject {
     HexObject roundedHex = (HexObject) new HexObject(layout.hexRound(fHex),type);
     roundedHex.type = this.selectedHexType;
     this.hexs.add(roundedHex);
-    this.redraw = true;
+
+    Point point = this.layout.hexToPixel(roundedHex);
+
+    screen.movePixels(
+      sm.getScaledPA(roundedHex.type),
+      gridPixelArray,
+      (int)point.x,
+      (int)point.y,
+      sm.getWidth(roundedHex.type), 
+      sm.getHeight(roundedHex.type));
   }
 
-  public void deleteHex(Point position){
+  public void deleteHex(Point position,ArrayList<GameObject> gameObjects){
     FractionalHex fHex = this.layout.pixelToHex(position);
     Hex roundedHex = layout.hexRound(fHex);
     this.hexs.removeIf((hex)->{
+        if(hex.equals(roundedHex)){
+          this.desintegrateHex(hex,gameObjects);
+        }
         return hex.equals(roundedHex);
     });
-    this.redraw = true;
+    Point point = this.layout.hexToPixel(roundedHex);
+    screen.movePixels(
+      sm.getScaledPA("empty_hex"),
+      gridPixelArray,
+      (int)point.x,
+      (int)point.y,
+      sm.getWidth("empty_hex"),
+      sm.getHeight("empty_hex"));
   }
 
   public void changeSize(int amount){
     this.size = new Point(this.size.x + amount, this.size.y + amount);
+    System.out.println("Size: " +this.size.x);
     this.redraw = true;
   }
 
@@ -155,6 +252,12 @@ public class WorldHexGrid implements GameObject {
     }
   }
 
+  private void reCalculateHexs(){
+    this.layout = new Layout(orientation,size,origin);
+    sm.reScaleHexImages(size);
+  }
+
+
   @Override
   public void update() {
     // TODO Auto-generated method stub
@@ -162,71 +265,24 @@ public class WorldHexGrid implements GameObject {
 
   @Override
   public void compose() {
-
-
-    // // TODO
-    // if(this.reCalculate){
-    //   // redo everything
-    // }else if(this.redraw){
-    //   // Just add/remove something
-
-    // }else{
-
-    // }
-
-
     if(this.redraw){
       this.clearFrame();
-      this.layout = new Layout(orientation,size,origin);
-      int iWidth = (int) (Math.sqrt(3)*size.x);
-      int iHeight = (int) (size.x *2);
-
-
-      BufferedImage re_water_hex = ImageLoader.resizeImage(bi_water_tile_1000, iWidth, iHeight);
-      BufferedImage re_plains_hex = ImageLoader.resizeImage(bi_plains_tile_1000, iWidth, iHeight);
-      BufferedImage re_empty_hex = ImageLoader.resizeImage(bi_empty_tile_1000, iWidth, iHeight);
-
-      //highlight
-      BufferedImage re_player_yellow_hex = ImageLoader.resizeImage(bi_player_yellow_hex_1000, iWidth, iHeight);
-      int[] re_player_yellow_hex_pixelArray = re_player_yellow_hex.getRGB(0, 0, re_player_yellow_hex.getWidth(), re_player_yellow_hex.getHeight(), null, 0, re_player_yellow_hex.getWidth());
-
-
-      int[] re_water_hex_pixelArray = re_water_hex.getRGB(0, 0, re_water_hex.getWidth(), re_water_hex.getHeight(), null, 0, re_water_hex.getWidth());
-      int[] re_plains_hex_pixelArray = re_plains_hex.getRGB(0, 0, re_plains_hex.getWidth(), re_plains_hex.getHeight(), null, 0, re_plains_hex.getWidth());
-      int[] re_empty_hex_pixelArray = re_empty_hex.getRGB(0, 0, re_empty_hex.getWidth(), re_empty_hex.getHeight(), null, 0, re_empty_hex.getWidth());
-
-
-      int[] blendedWater = this.screen.blendBuffers(re_plains_hex_pixelArray, re_water_hex_pixelArray, 0.5, 0.5);
-
-      
-
-      //// Red outline
-      //Color red = new Color("Red", 255,0,0);
+      this.reCalculateHexs();
       this.hexs.forEach((hex)->{
           Point point = layout.hexToPixel(hex);
-          switch (hex.type){
-            case "water_hex":{
-              screen.movePixels(blendedWater,this.gridPixelArray,(int)point.x,(int)point.y,re_water_hex.getWidth(),re_water_hex.getHeight());
-              break;
-            }
-            case "plains_hex":{
-              screen.movePixels(re_plains_hex_pixelArray,this.gridPixelArray,(int)point.x,(int)point.y,re_plains_hex.getWidth(),re_plains_hex.getHeight());
-              break;
-            }
-            case "empty_hex":{
-              screen.movePixels(re_empty_hex_pixelArray,this.gridPixelArray,(int)point.x,(int)point.y,re_empty_hex.getWidth(),re_empty_hex.getHeight());
-              break;
-            }
-          }
+          screen.movePixels(
+            sm.getScaledPA(hex.type),
+            gridPixelArray,
+            (int)point.x,
+            (int)point.y,
+            sm.getWidth(hex.type),
+            sm.getHeight(hex.type));
       });
       this.redraw = false;
-    }else{
-
-      // Copy all our grid pixels into our screen pixels buffer
-      for(int i = 0;i<screen.pixels.length;i++){
-        screen.pixels[i] = this.gridPixelArray[i];
-      }
-
+    }
+    // Copy all our grid pixels into our screen pixels buffer
+    for(int i = 0;i<screen.pixels.length;i++){
+      screen.pixels[i] = this.gridPixelArray[i];
     }
   }
 
@@ -244,5 +300,10 @@ public class WorldHexGrid implements GameObject {
     }else{
       return 1;
     }
+  }
+
+  @Override
+  public boolean isDead() {
+    return false;
   }
 }

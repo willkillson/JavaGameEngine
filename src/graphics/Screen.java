@@ -1,4 +1,11 @@
 package graphics;
+
+import java.util.ArrayList;
+
+import game.entity.HexObject;
+import graphics.hex.Layout;
+import graphics.hex.Point;
+
 public class Screen {
 
     public int width;
@@ -141,35 +148,16 @@ public class Screen {
         putPixel(x,y,c.r,c.g,c.b);
     }   
 
-    // public void putHexagon(Hex hex, Layout layout, Point origin, Point size, Color c){
-    //     ArrayList<Point> corners = layout.polygonCorners(hex);
-    //     corners.add(corners.get(0));
-    //     for(int i = 0;i< 6;i++){
-    //         this.plotLine(
-    //             (int)corners.get(i).x,
-    //             (int)corners.get(i).y,
-    //             (int)(corners.get(i+1).x),
-    //             (int)(corners.get(i+1).y),
-    //             c);
-    //     }
-    // }
-
-    public void movePixels(int[] sourcePixels,int x_pos, int y_pos, int arrayWidth, int arrayHeight){
-        int height = 0;
-        int width = 1920;
-        x_pos = x_pos -arrayWidth/2;
-        y_pos = y_pos - arrayHeight/2;
-        for(int i = x_pos + y_pos * width;i<this.pixels.length;i++){
-            if(i% width==0){
-                if(height<arrayHeight){ 
-                    for(int k = 0;k< arrayWidth;k++){
-                        if(sourcePixels[k+height*arrayWidth]!=0)
-                             this.pixels[i+k+x_pos] =  sourcePixels[k+height*arrayWidth];
-                    }
-                }
-                height++;
-                i= i+arrayWidth;
-            }
+    public void putHexagon(HexObject hex, Layout layout, Point origin, Point size, Color c){
+        ArrayList<Point> corners = layout.polygonCorners(hex);
+        corners.add(corners.get(0));
+        for(int i = 0;i< 6;i++){
+            this.plotLine(
+                (int)corners.get(i).x,
+                (int)corners.get(i).y,
+                (int)(corners.get(i+1).x),
+                (int)(corners.get(i+1).y),
+                c);
         }
     }
 

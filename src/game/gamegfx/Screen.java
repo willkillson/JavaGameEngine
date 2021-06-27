@@ -1,8 +1,10 @@
-package graphics;
+package game.gamegfx;
 
 import java.util.ArrayList;
 
 import game.entity.HexObject;
+import graphics.Color;
+import graphics.Vec2;
 import graphics.hex.Layout;
 import graphics.hex.Point;
 
@@ -10,7 +12,7 @@ public class Screen {
 
     public int width;
     public int height;
-    public int[]pixels;
+    public int[] pixels;
 
     public Screen(int width, int height){
         this.width = width;
@@ -158,36 +160,6 @@ public class Screen {
                 (int)(corners.get(i+1).x),
                 (int)(corners.get(i+1).y),
                 c);
-        }
-    }
-
-    public void movePixels(int[] sourcePixels,int[] destinationPixels, int x_pos, int y_pos, int arrayWidth, int arrayHeight){
-        int height = 0;
-        int width = 1920;
-        int center_x_pos =  x_pos - arrayWidth/2;
-        int center_y_pos =  y_pos - arrayHeight/2;
-        for(int i = center_x_pos + center_y_pos * width;i<destinationPixels.length;i++){
-            if(i% width==0){
-                if(height<arrayHeight){ 
-                    for(int k = 0;k< arrayWidth;k++){   // Loop f writing in the sourcePixels buffer to the destinationPixels buffer
-                        try{
-                            if(sourcePixels[k+height*arrayWidth]!=0){ // Prevent writing in empty pixels/alphachannel
-                                if(i>0){    // Prevent writing in negative indexs;
-                                    if(k+center_x_pos>0){   // prevent wrap around left
-                                        if(k+center_x_pos<width){   // prevent wrap around right
-                                            destinationPixels[i+k+center_x_pos] = sourcePixels[k+height*arrayWidth];
-                                        }
-                                    }
-                                }
-                            }
-                        }catch(Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                height++;
-                i= i+arrayWidth;
-            }
         }
     }
 

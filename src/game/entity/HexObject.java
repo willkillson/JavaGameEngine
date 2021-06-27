@@ -1,54 +1,25 @@
 package game.entity;
 
+import game.gamegfx.ScreenLayers.LayerType;
 import graphics.hex.Hex;
 
-public class HexObject extends Hex implements GameObject {
+public class HexObject extends Hex {
 
-  public String type;
+  public LayerType layerType;
+  public String spriteName;
   public boolean isDead;
 
-  public HexObject(int q, int r, int s, String type) {
+  public HexObject(int q, int r, int s, LayerType type, String spriteName) {
     super(q, r, s);
-    this.type = type;
+    this.layerType = type;
+    this.spriteName = spriteName;
     this.isDead = false;
-    //TODO Auto-generated constructor stub
   }
 
-  public HexObject(Hex hexRound, String type2) {
+  public HexObject(Hex hexRound, LayerType layerType, String spriteName) {
     super(hexRound.getQ(), hexRound.getR(), hexRound.getS());
-    this.type = type2;
+    this.layerType = layerType;
+    this.spriteName = spriteName;
   }
 
-  @Override
-  public int compareTo(GameObject o) {
-    if(this.getDrawPriority()==o.getDrawPriority()){
-      return 0;
-    }else if(this.getDrawPriority()<o.getDrawPriority()){
-      return -1;
-    }else{
-      return 1;
-    }
-  }
-
-  @Override
-  public void update() {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void compose() {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public int getDrawPriority() {
-    return 0;
-  }
-
-  @Override
-  public boolean isDead() {
-    return this.isDead;
-  }  
 }

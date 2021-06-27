@@ -1,9 +1,11 @@
 package game.entity;
-import graphics.Screen;
 import graphics.Vec2;
+import game.gamegfx.Screen;
+import game.gamegfx.ScreenLayers;
+import game.gamegfx.SpriteManager;
 import graphics.Color;
 
-public class PixelUnit implements GameObject {
+public class PixelEntity implements Entity {
 
     private Screen screen;
 
@@ -17,7 +19,7 @@ public class PixelUnit implements GameObject {
 
     private Color color;
 
-    public PixelUnit(
+    public PixelEntity(
         Screen screen, 
         Vec2 position, 
         Vec2 velocity,
@@ -36,7 +38,7 @@ public class PixelUnit implements GameObject {
 
     }
 
-    public PixelUnit(
+    public PixelEntity(
         Screen screen, 
         Vec2 position, 
         Vec2 velocity,
@@ -107,26 +109,8 @@ public class PixelUnit implements GameObject {
     }
 
     @Override
-    public void compose() {
-        if(!this.isDead){
-            screen.putPixel((int)this.posX, (int)this.posY,this.color.r, this.color.g, this.color.b);
-        }
-    }
-
-    @Override
     public int getDrawPriority() {
         return 1;
-    }
-
-    @Override
-    public int compareTo(GameObject o) {
-        if(this.getDrawPriority()==o.getDrawPriority()){
-            return 0;
-          }else if(this.getDrawPriority()<o.getDrawPriority()){
-            return -1;
-          }else{
-            return 1;
-          }
     }
 
     @Override
@@ -134,6 +118,13 @@ public class PixelUnit implements GameObject {
         return this.isDead;
     }
 
+    @Override
+    public void compose(ScreenLayers screenLayers, SpriteManager sm) {
+        if(!this.isDead){
+            screen.putPixel((int)this.posX, (int)this.posY,this.color.r, this.color.g, this.color.b);
+        }
+        
+    }
 
 
 }

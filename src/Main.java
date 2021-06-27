@@ -1,9 +1,12 @@
 import game.Game;
-import graphics.Screen;
+import game.gamegfx.Screen;
+import game.gamegfx.ScreenLayers;
 import input.ConsoleHandler;
 import input.InputEvent;
 import input.KeyHandler;
 import input.MouseHandler;
+import ui.TextAreaOutputStream;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -12,12 +15,12 @@ import java.awt.image.DataBufferInt;
 import java.io.PrintStream;
 import java.util.Stack;
 
-public class Engine extends Canvas implements Runnable{
+import util.Constants;
 
-    public static int width = 1920;
-    public static int height = 1080;
+public class Main extends Canvas implements Runnable{
+
     public static int scale = 1;
-
+    
     private Thread thread;
     public JFrame frame;
     private boolean running = false;
@@ -33,22 +36,23 @@ public class Engine extends Canvas implements Runnable{
     private int ups;
 
     Game game;
-    private Screen screen;
-    private BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
+    private ScreenLayers screenLayers;
+    private BufferedImage image = new BufferedImage(Constants.WIDTH,Constants.HEIGHT,BufferedImage.TYPE_INT_RGB);
     private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 
     public static void main(String[] args) {
-        new Engine();
+        new Main();
     }
 
-    public Engine(){
+    public Main(){
 
-        Dimension size = new Dimension(width*scale,height*scale);
+        Dimension size = new Dimension(Constants.WIDTH*scale,Constants.HEIGHT*scale);
         setPreferredSize(size);
-
-        screen = new Screen(width,height);
+        
         frame = new JFrame();
 
+
+        this.screenLayers = new ScreenLayers(3);
         this.inputEventQue = new Stack<InputEvent>();
         this.mouseHandler = new MouseHandler(inputEventQue);
         this.keyHandler = new KeyHandler(inputEventQue);
@@ -99,7 +103,7 @@ public class Engine extends Canvas implements Runnable{
 
     @Override
     public void run() {
-        game = new Game(screen, this.inputEventQue);
+        game = new Game(this.screenLayers, this.inputEventQue);
         game.init();
         running = true;
         double accumulator = 0;
@@ -147,7 +151,7 @@ public class Engine extends Canvas implements Runnable{
         }
         // Copy all our screen pixels into our pixels buffer
         for(int i = 0;i<pixels.length;i++){
-            pixels[i] = screen.pixels[i];
+            pixels[i] = this.screenLayers.main[i];
         }
         Graphics g = bs.getDrawGraphics();
         g.drawImage(image, 0,0,getWidth(),getHeight(), null);

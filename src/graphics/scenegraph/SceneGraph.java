@@ -1,4 +1,4 @@
-package graphics.sceengraph;
+package graphics.scenegraph;
 
 public class SceneGraph {
   

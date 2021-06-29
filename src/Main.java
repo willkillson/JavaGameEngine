@@ -1,6 +1,6 @@
 import game.Game;
 import game.gamegfx.Screen;
-import game.gamegfx.ScreenLayers;
+import game.gamegfx.Screen;
 import input.ConsoleHandler;
 import input.InputEvent;
 import input.KeyHandler;
@@ -36,9 +36,7 @@ public class Main extends Canvas implements Runnable{
     private int ups;
 
     Game game;
-    private ScreenLayers screenLayers;
-    private BufferedImage image = new BufferedImage(Constants.WIDTH,Constants.HEIGHT,BufferedImage.TYPE_INT_RGB);
-    private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+    private Screen screenLayers;
 
     public static void main(String[] args) {
         new Main();
@@ -52,7 +50,7 @@ public class Main extends Canvas implements Runnable{
         frame = new JFrame();
 
 
-        this.screenLayers = new ScreenLayers(3);
+        this.screenLayers = new Screen(3);
         this.inputEventQue = new Stack<InputEvent>();
         this.mouseHandler = new MouseHandler(inputEventQue);
         this.keyHandler = new KeyHandler(inputEventQue);
@@ -149,12 +147,11 @@ public class Main extends Canvas implements Runnable{
             createBufferStrategy(3);//triple buffering
             return;
         }
-        // Copy all our screen pixels into our pixels buffer
-        for(int i = 0;i<pixels.length;i++){
-            pixels[i] = this.screenLayers.main[i];
-        }
+
+        screenLayers.paintLayers();
+        
         Graphics g = bs.getDrawGraphics();
-        g.drawImage(image, 0,0,getWidth(),getHeight(), null);
+        g.drawImage(screenLayers.getMainBI(), 0,0,getWidth(),getHeight(), null);
         g.dispose();
         bs.show();
     }

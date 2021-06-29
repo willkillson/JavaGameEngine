@@ -3,10 +3,10 @@ package game.gamegfx;
 import java.util.HashMap;
 import java.util.Map;
 
-import game.gamegfx.ScreenLayers;
-import game.gamegfx.ScreenLayers.LayerType;
+import game.gamegfx.Screen;
+import game.gamegfx.Screen.LayerType;
 import graphics.hex.Point;
-import io.ImageLoader;
+import graphics.io.ImageLoader;
 
 public class SpriteManager {
 
@@ -14,6 +14,8 @@ public class SpriteManager {
 
   private Map<String, Sprite> sprites;
   private Point hexSize;
+  private int hexScaledWidth;
+  private int hexScaledHeight;
   public Map<String, LayerType> layerTypeMap;
   
   public SpriteManager(Point hexSize){
@@ -39,22 +41,27 @@ public class SpriteManager {
       }
     });
 
+    this.calculateHexs(this.hexSize);
+
   }
 
   public void calculateHexs(Point size){
     sprites.keySet().forEach(e->{
       if(sprites.get(e).getType() == LayerType.HEX_TILE){
         sprites.get(e).scaleBufferImage(size);
+        this.hexScaledWidth = (int) (Math.sqrt(3)*size.x);
+        this.hexScaledHeight = (int) (size.y *2);
       }
     });
   }
 
   public int getWidth(LayerType lt){
-    return (int)this.hexSize.x;
+    return this.hexScaledWidth;
   }
 
   public int getHeight(LayerType lt){
-    return (int)this.hexSize.y;
+
+    return this.hexScaledHeight;
   }
 
   public int[] getSPA(String name){

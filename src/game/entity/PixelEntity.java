@@ -1,7 +1,7 @@
 package game.entity;
 import graphics.Vec2;
 import game.gamegfx.Screen;
-import game.gamegfx.ScreenLayers;
+import game.gamegfx.Screen;
 import game.gamegfx.SpriteManager;
 import graphics.Color;
 
@@ -119,7 +119,7 @@ public class PixelEntity implements Entity {
     }
 
     @Override
-    public void compose(ScreenLayers screenLayers, SpriteManager sm) {
+    public void compose(Screen screenLayers, SpriteManager sm) {
         if(!this.isDead){
             screen.putPixel((int)this.posX, (int)this.posY,this.color.r, this.color.g, this.color.b);
         }

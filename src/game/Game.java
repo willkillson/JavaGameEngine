@@ -1,5 +1,7 @@
 package game;
 
+import graphics.SpriteLibrary;
+import graphics.SpriteSet;
 import graphics.hex.Layout;
 import graphics.hex.Orientation;
 import graphics.hex.Point;
@@ -10,22 +12,27 @@ import java.util.Stack;
 
 import game.entity.Entity;
 import game.entity.HexGrid;
+import game.entity.UnitEntity;
 import game.gamegfx.Screen;
-import game.gamegfx.ScreenLayers;
+import game.gamegfx.Screen;
 import game.gamegfx.SpriteManager;
 import input.InputEvent;
 import util.Constants;
 
 public class Game {
 
-    private ScreenLayers screenLayers;
-    private SpriteManager spriteManager;
-    private Stack<InputEvent> eventQue;
+    public static final int SPRITE_SIZE = 64;
+
     private ArrayList<Entity> gameEntities;
     private HexGrid hexGrid;
     private String selectedHexName;
 
-    public Game(ScreenLayers screenLayers, Stack<InputEvent> eventQue){
+    private SpriteManager spriteManager;
+    private Screen screenLayers;
+    private Stack<InputEvent> eventQue;
+    private SpriteLibrary spriteLibrary;
+
+    public Game(Screen screenLayers, Stack<InputEvent> eventQue){
 
         /*
             Layer 0 -> hexs
@@ -39,9 +46,12 @@ public class Game {
     
     public void init(){
 
+        this.spriteLibrary = new SpriteLibrary();
+
         this.selectedHexName = "water_hex";
         
         Point size = new Point(35.0d,35.0d);
+        
         Point origin = new Point(Constants.WIDTH/2, Constants.HEIGHT/2);
         Orientation orientation = Orientation.layoutPointy();
 
@@ -55,6 +65,10 @@ public class Game {
             origin);
 
         gameEntities.add(this.hexGrid);
+
+        UnitEntity ue = new UnitEntity(this.spriteLibrary, (double)Constants.WIDTH/2, (double)Constants.HEIGHT/2);
+
+        gameEntities.add(ue);
     }
 
     public void update(){
@@ -62,9 +76,9 @@ public class Game {
         // Handles events
         this.processEventQue();
 
-        // for(Entity u: gameEntities){
-        //     u.update();
-        // }
+        for(Entity u: gameEntities){
+            u.update();
+        }
     }
 
     private void processEventQue(){
@@ -79,8 +93,10 @@ public class Game {
 
 
                             if(event.keyText.compareTo("1")==0){    //left click
-                                this.hexGrid.createHex(point,this.selectedHexName, spriteManager.layerTypeMap.get(this.selectedHexName));
+                                String spriteName = this.selectedHexName;
+                                this.hexGrid.createHex(point,spriteName, spriteManager, screenLayers);
                             }else if(event.keyText.compareTo("3")==0){  //right click
+
                                 //this.hexGrid.deleteHex(point,pixelEntities);
                             } 
                         }

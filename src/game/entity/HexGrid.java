@@ -17,9 +17,9 @@ import org.json.JSONTokener;
 
 import game.gamegfx.PixelManager;
 import game.gamegfx.Screen;
-import game.gamegfx.ScreenLayers;
+import game.gamegfx.Screen;
 import game.gamegfx.SpriteManager;
-import game.gamegfx.ScreenLayers.LayerType;
+import game.gamegfx.Screen.LayerType;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -139,11 +139,23 @@ public class HexGrid implements Entity {
     // }
   }
 
-  public void createHex(Point position, String spriteName, LayerType layerType){
+  public void createHex(Point position, String spriteName, SpriteManager sm, Screen screenLayers){
+
+    LayerType lt = sm.layerTypeMap.get(spriteName);
     FractionalHex fHex = this.layout.pixelToHex(position);
-    HexObject roundedHex = (HexObject) new HexObject(layout.hexRound(fHex),layerType,spriteName);
+    HexObject roundedHex = (HexObject) new HexObject(layout.hexRound(fHex),lt,spriteName);
     this.hexs.add(roundedHex);
-    this.redraw = true;
+
+    
+    int[] layer = screenLayers.gitLayer(lt);
+    int[] spa = sm.getSPA(spriteName);
+
+    Point point = layout.hexToPixel(roundedHex);
+    int width = sm.getWidth(roundedHex.layerType);
+    int height = sm.getHeight(roundedHex.layerType);
+    screenLayers.movePixels(spa, layer, (int)point.x, (int)point.y, width, height);
+    screenLayers.updateLayer(lt);
+
     //Point point = this.layout.hexToPixel(roundedHex);
     // screen.movePixels(
     //   sm.getSPA(roundedHex.spriteName), 
@@ -155,7 +167,7 @@ public class HexGrid implements Entity {
 
   }
 
-  public void deleteHex(Point position,ArrayList<Entity> pixelObjects){
+  public void deleteHex(Point position, ArrayList<Entity> pixelObjects){
 
     FractionalHex fHex = this.layout.pixelToHex(position);
     Hex roundedHex = layout.hexRound(fHex);
@@ -281,8 +293,9 @@ public class HexGrid implements Entity {
   }
 
   @Override
-  public void compose(ScreenLayers screenLayers, SpriteManager sm) {
+  public void compose(Screen screenLayers, SpriteManager sm) {
     if(this.redraw){
+      System.out.println("redrawing");
 
       //sm.calculateHexs(size);
 
@@ -296,15 +309,17 @@ public class HexGrid implements Entity {
     //   pm.getWidth(roundedHex.type), 
     //   pm.getHeight(roundedHex.type));
 
-      this.hexs.forEach(hex->{
-        int[] layer = screenLayers.gitLayer(sm.layerTypeMap.get(hex.spriteName));
-        int[] spa = sm.getSPA(hex.spriteName);
-        
-        Point point = layout.hexToPixel(hex);
-        int width = sm.getWidth(hex.layerType);
-        int height = sm.getHeight(hex.layerType);
-        screenLayers.movePixels(spa, layer, (int)point.x, (int)point.y, width, height);
-      });
+      // this.hexs.forEach(hex->{
+      //   LayerType lt = sm.layerTypeMap.get(hex.spriteName);
+      //   int[] layer = screenLayers.gitLayer(lt);
+      //   int[] spa = sm.getSPA(hex.spriteName);
+
+      //   Point point = layout.hexToPixel(hex);
+      //   int width = sm.getWidth(hex.layerType);
+      //   int height = sm.getHeight(hex.layerType);
+      //   screenLayers.movePixels(spa, layer, (int)point.x, (int)point.y, width, height);
+      //   screenLayers.updateLayer(lt);
+      // });
       
 
       //TODO refactor this code so the sprite manager uses the Sprite.java class

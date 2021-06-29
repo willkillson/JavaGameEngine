@@ -2,9 +2,9 @@ package game.gamegfx;
 
 import java.awt.image.BufferedImage;
 
-import game.gamegfx.ScreenLayers.LayerType;
+import game.gamegfx.Screen.LayerType;
 import graphics.hex.Point;
-import io.ImageLoader;
+import graphics.io.ImageLoader;
 
 public class Sprite {
 

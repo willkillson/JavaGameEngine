@@ -1,204 +1,120 @@
 package game.gamegfx;
 
-import java.util.ArrayList;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
-import game.entity.HexObject;
-import graphics.Color;
-import graphics.Vec2;
-import graphics.hex.Layout;
-import graphics.hex.Point;
+import java.util.HashMap;
+import java.util.Map;
+
+import util.Constants;
 
 public class Screen {
 
-    public int width;
-    public int height;
-    public int[] pixels;
+  public enum LayerType{
+    HEX_TILE,
+    PLAYER_PIECE,
+    PIXEL
+  }
 
-    public Screen(int width, int height){
-        this.width = width;
-        this.height = height;
-        pixels = new int[width*height];
+  private BufferedImage mainBI;
+  public int[] mainPA;
+
+  private Map<Integer,int[]> layers;
+
+  private Map<Integer, Boolean> layerUpdate;
+  
+
+  public Screen(int numLayers){
+    this.mainBI = new BufferedImage(Constants.WIDTH,Constants.HEIGHT,BufferedImage.TYPE_INT_RGB);
+    this.mainPA = ((DataBufferInt)mainBI.getRaster().getDataBuffer()).getData();
+
+    // Main.
+    layers = new HashMap<Integer, int[]>();
+    layerUpdate = new HashMap<Integer, Boolean>();
+    for(int i = 0;i< numLayers; i++){
+      layers.put(i, new int[Constants.HEIGHT * Constants.WIDTH]); 
+      layerUpdate.put(i, true);
     }
+  }
 
-    public void clearFrame(){
-        for(int i = 0;i<   pixels.length;i++){
-            pixels[i] = 0;
+  public BufferedImage getMainBI(){
+    return this.mainBI;
+  }
+
+  public void paintLayers(){
+    for(int i = 0;i< mainPA.length;i++){
+      //mainPA[i] = 0;  // Clear it
+      if(layerUpdate.get(0)){
+        if(layers.get(0)[i]!=0){
+          mainPA[i] = layers.get(0)[i]; // Assign the buffer according to layer priority
         }
+      }
     }
-
-    public void plotLine(int x0, int y0,int x1, int y1,Color c){
-      plotLine(x0,y0,x1,y1,c.r,c.g,c.b);
+  
+    for(int i = 0;i< layerUpdate.size();i++){
+      this.layerUpdate.put(i, false);
     }
+  }
 
-    public void plotLine(int x0, int y0,int x1, int y1,int r, int g, int b ){
-        /*
-            Bresenham's line aalgorithm
-            https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
-         */
+  public int[] gitLayer(LayerType lt){
+    switch(lt){
+      case HEX_TILE:{
+        return this.layers.get(0);
+      }
+      case PLAYER_PIECE:{
+        return this.layers.get(1);
 
-        if(Math.abs(y1-y0)<Math.abs(x1-x0))
-        {
-            if(x0>x1){
-                plotLineLow(x1,y1,x0,y0,r,g,b);
+      }
+      default:
+        break;
+    }
+    
+    return null;
+  }
+
+  public void updateLayer(LayerType lt){
+    switch(lt){
+      case HEX_TILE:{
+        layerUpdate.put(0, true);
+      }
+      case PLAYER_PIECE:{
+        layerUpdate.put(1, true);
+      }
+      default:
+        break;
+    }
+  }
+
+  public void movePixels(int[] sourcePixels,int[] destinationPixels, int x_pos, int y_pos, int arrayWidth, int arrayHeight){
+    int height = 0;
+    int width = 1920;
+    int center_x_pos =  x_pos - arrayWidth/2;
+    int center_y_pos =  y_pos - arrayHeight/2;
+    for(int i = center_x_pos + center_y_pos * width;i<destinationPixels.length && height<arrayHeight;i++){
+        if(i% width==0){
+            if(height<arrayHeight){ 
+                for(int k = 0;k< arrayWidth;k++){   // Loop f writing in the sourcePixels buffer to the destinationPixels buffer
+                    try{
+                        if(sourcePixels[k+height*arrayWidth]!=0){ // Prevent writing in empty pixels/alphachannel
+                            if(i>0){    // Prevent writing in negative indexs;
+                                if(k+center_x_pos>0){   // prevent wrap around left
+                                    if(k+center_x_pos<width){   // prevent wrap around right
+                                        destinationPixels[i+k+center_x_pos] = sourcePixels[k+height*arrayWidth];
+                                    }
+                                }
+                            }
+                        }
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
             }
-            else
-            {
-                plotLineLow(x0,y0,x1,y1,r,g,b);
-            }
-        }
-        else
-        {
-            if(y0>y1){
-                plotLineHigh(x1,y1,x0,y0,r,g,b);
-            }
-            else
-            {
-                plotLineHigh(x0,y0,x1,y1,r,g,b);
-            }
-        }
-
-
-    }
-
-    public void plotLineLow(int x0, int y0, int x1, int y1, int r, int g, int b){
-        double dx = x1-x0;
-        double dy = y1-y0;
-        double yi = 1;
-        if(dy<0){
-            yi = -1;
-            dy = -dy;
-        }
-        double D =  2*dy - dx;
-        double y = y0;
-        for(int x = x0;x<x1;x++){
-            putPixel((int)x,(int)y,r,g,b);
-            if(D>0){
-                y = y+yi;
-                D = D-2*dx;
-            }
-            D = D+2*dy;
-        }
-
-    }
-
-    public void plotLineHigh(int x0, int y0, int x1, int y1, int r, int g, int b){
-        double dx = x1-x0;
-        double dy = y1-y0;
-        double xi = 1;
-        if(dx<0){
-            xi = -1;
-            dx = -dx;
-        }
-        double D =  2*dx - dy;
-        double x = x0;
-        for(int y= y0;y<y1;y++){
-            putPixel((int)x,(int)y,r,g,b);
-            if(D>0){
-                x = x+xi;
-                D = D-2*dy;
-            }
-            D = D+2*dx;
-        }
-
-    }
-
-    public void drawRect(Vec2 p1, Vec2 p2,int r, int g, int b){
-        drawRect((int)p1.x,(int)p1.y,(int)p2.x,(int)p2.y,r,g,b);
-    }
-
-    public void drawRect(int x0, int y0, int x, int y, int r, int g, int b){
-        for(int i = x0;i< x;i++){
-            for(int j = y0;j< y;j++){
-                putPixel(i,j,r,g,b);
-            }
+            height++;
+            i= i+arrayWidth;
         }
     }
+}
 
-    public void drawRect(int x0, int y0, int x, int y, Color c){
-        for(int i = x0;i< x;i++){
-            for(int j = y0;j< y;j++){
-                putPixel(i,j,c.r,c.g,c.b);
-            }
-        }
-    }
 
-    public void putPixel(Vec2 point, int r, int g, int b){
-        putPixel((int)point.x,(int)point.y,r,g,b);
-    }
-
-    public void putPixel(int x, int y, int r, int g, int b){
-
-        if(x<0 || x >= width){
-            return;
-        }
-
-        if(y<0 || y >= height ){
-            return;
-        }
-
-        try{
-            int number = r<< 8;
-            number = number + g << 8;
-            number = number + b;
-            pixels[x + y * width] =  number;
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void putPixel(int x, int y, Color c) {
-        putPixel(x,y,c.r,c.g,c.b);
-    }   
-
-    public void putHexagon(HexObject hex, Layout layout, Point origin, Point size, Color c){
-        ArrayList<Point> corners = layout.polygonCorners(hex);
-        corners.add(corners.get(0));
-        for(int i = 0;i< 6;i++){
-            this.plotLine(
-                (int)corners.get(i).x,
-                (int)corners.get(i).y,
-                (int)(corners.get(i+1).x),
-                (int)(corners.get(i+1).y),
-                c);
-        }
-    }
-
-    public int[] blendBuffers(int[] pixelBuffer1, int[] pixelBuffer2, double ratioPixelBuffer1, double ratioPixelBuffer2){
-        int blueMask = 0xFF0000;
-        int greenMask = 0xFF00;
-        int redMask = 0xFF;
-        
-        int[] blendedPixelBuffer = new int[pixelBuffer1.length];
-        for(int i = 0;i< pixelBuffer1.length;i++){
-            
-            int r1 = pixelBuffer1[i]&redMask;
-            int r2 = pixelBuffer2[i]&redMask;
-
-            int g1 = pixelBuffer1[i]&greenMask;
-            int g2 = pixelBuffer2[i]&greenMask;
-
-            int b1 = pixelBuffer1[i]&blueMask;
-            int b2 = pixelBuffer2[i]&blueMask;
-
-            int final_r = (int)(ratioPixelBuffer1*r1 + ratioPixelBuffer2*r2);
-            if(final_r>redMask)
-                final_r = redMask;
-
-            int final_g = (int)(ratioPixelBuffer1*g1 + ratioPixelBuffer2*g2);
-            if(final_g>greenMask)
-                final_g = greenMask;
-
-            int final_b = (int)(ratioPixelBuffer1*b1 + ratioPixelBuffer2*b2);
-            if(final_b>blueMask)
-                final_b = blueMask;
-
-            int number = final_r << 8;
-            number = number + final_g << 8;
-            number = number + final_b;
-            blendedPixelBuffer[i] = number;
-
-        }
-        return blendedPixelBuffer;
-    }
 
 }

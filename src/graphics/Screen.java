@@ -25,8 +25,8 @@ public class Screen {
     }
 
     public void sudoShader(){
-        for(int i = 0;i< this.width/2;i++){
-            for(int j = 0;j< this.height/2;j++){
+        for(int i = 0;i< this.width;i++){
+            for(int j = 0;j< this.height;j++){
                 Vec4 fragmentShader = frag(new Vec2(i,j));
                 putPixel(i,j,new Color(
                         "Shader",
@@ -45,8 +45,9 @@ public class Screen {
         uv.x /= this.width;
         uv.y /= this.height;
         uv.x *= this.width/this.height;
-        uv.y  -= 0.25;
-        uv.x -= 0.25;
+
+        uv.y  -= 0.50;
+        uv.x -= 0.50;
         double d = distance(uv,new Vec2(0,0));
 
         return new Vec4(1.0*d,1.0*d,1.0*d,1.0);

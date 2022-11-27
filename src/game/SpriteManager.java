@@ -17,11 +17,16 @@ public class SpriteManager {
     rawBI = new HashMap<String, BufferedImage>();
     scaledBI = new HashMap<String, BufferedImage>();
     scaledPA = new HashMap<String, int[]>();
+    try{
+      rawBI.put("water_hex", ImageLoader.loadImage("\\assets\\hex_tiles\\png\\water_hex_tile_1000.png"));
+      rawBI.put("plains_hex", ImageLoader.loadImage("\\assets\\hex_tiles\\png\\plains2_hex.png"));
+      rawBI.put("empty_hex", ImageLoader.loadImage("\\assets\\hex_tiles\\png\\empty_hex_tile_1000.png"));
+      rawBI.put("player_yello", ImageLoader.loadImage("\\assets\\hex_tiles\\png\\player_yellow_hex.png"));
+    }catch (Exception e){
+      e.printStackTrace();
+    }
 
-    rawBI.put("water_hex", ImageLoader.loadImage("./assets/hex_tiles/png/water_hex_tile_1000.png"));
-    rawBI.put("plains_hex", ImageLoader.loadImage("./assets/hex_tiles/png/plains2_hex.png"));
-    rawBI.put("empty_hex", ImageLoader.loadImage("./assets/hex_tiles/png/empty_hex_tile_1000.png"));
-    rawBI.put("player_yello", ImageLoader.loadImage("./assets/hex_tiles/png/player_yellow_hex.png"));
+
   }
 
   public void reScaleHexImages(Point size){

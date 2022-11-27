@@ -14,12 +14,14 @@ public class ImageLoader {
   {
       BufferedImage bi = null;
       try {
-          bi = ImageIO.read(new File(fileName));
+          String path = System.getProperty("user.dir") +fileName;
+          bi = ImageIO.read(new File(path));
       } catch (IOException e) {
           e.printStackTrace();
           System.out.println("Image could not be read");
           System.exit(1);
       }
+      //C:\Users\willk\code\JavaGameEngine\assets\hex_titles\png\empty_hex_tile_1000.png
 
       
       return bi;

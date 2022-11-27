@@ -5,17 +5,33 @@ import java.util.ArrayList;
 import game.entity.HexObject;
 import graphics.hex.Layout;
 import graphics.hex.Point;
+//import graphics.shaders.concrete.ColorDemo;
+//import graphics.shaders.concrete.FragmentCircleDemo;
+import graphics.shaders.FragmentShader;
+//import graphics.shaders.concrete.RayMarching;
+import graphics.shaders.concrete.TruchetTiling;
+import graphics.vec.Vec2;
+import graphics.vec.Vec4;
 
 public class Screen {
 
+    private Vec2 currentMousePosition;
+    private Vec2 resolution;
     public int width;
     public int height;
     public int[]pixels;
 
     public Screen(int width, int height){
+        this.resolution = new Vec2((double)width,(double)height);
+        this.currentMousePosition = new Vec2(0.0,0.0);
         this.width = width;
         this.height = height;
         pixels = new int[width*height];
+    }
+
+    public void updateMousePosition(double x, double y){
+        this.currentMousePosition.x = x;
+        this.currentMousePosition.y = y;
     }
 
     public void clearFrame(){
@@ -25,33 +41,54 @@ public class Screen {
     }
 
     public void sudoShader(){
-        for(int i = 0;i< this.width;i++){
-            for(int j = 0;j< this.height;j++){
-                Vec4 fragmentShader = frag(new Vec2(i,j));
-                putPixel(i,j,new Color(
-                        "Shader",
-                        (int)(fragmentShader.x*255),
-                        (int)(fragmentShader.y*255),
-                        (int)(fragmentShader.z*255)));
-            }
-        }
+        // Create the fragment shader
+//        FragmentShader fragmentShader1 = new RayMarching(
+//                this.resolution,
+//                this.currentMousePosition);
+//
+//        FragmentShader fragmentShader2 = new FragmentCircleDemo(
+//                this.resolution,
+//                this.currentMousePosition);
+//
+//        FragmentShader fragmentShader3 = new ColorDemo(
+//                this.resolution,
+//                this.currentMousePosition);
+
+        FragmentShader fragmentShader1 = new TruchetTiling(this,1,
+                this.resolution,
+                this.currentMousePosition);
+
+        FragmentShader fragmentShader2 = new TruchetTiling(this,2,
+                this.resolution,
+                this.currentMousePosition);
+        FragmentShader fragmentShader3 = new TruchetTiling(this,3,
+                this.resolution,
+                this.currentMousePosition);
+        FragmentShader fragmentShader4 = new TruchetTiling(this,4,
+                this.resolution,
+                this.currentMousePosition);
+        fragmentShader1.start();
+        fragmentShader2.start();
+        fragmentShader3.start();
+        fragmentShader4.start();
+
+
+//        for(int i = 0;i< this.width;i++){
+//            for(int j = 0;j< this.height;j++){
+//                Vec4 out = fragmentShader4.frag(new Vec2(i,j));
+//                putPixel(
+//                        i,
+//                        j,
+//                        new Color("Shader",
+//                        (int)(out.x*255),
+//                        (int)(out.y*255),
+//                        (int)(out.z*255)));
+//            }
+//        }
 
     }
-    private double distance(Vec2 p1, Vec2 p2){
-        return Math.sqrt(Math.pow(p2.x - p1.x,2) + Math.pow(p2.y-p1.y,2));
-    }
 
-    public Vec4 frag(Vec2 uv){
-        uv.x /= this.width;
-        uv.y /= this.height;
-        uv.x *= this.width/this.height;
 
-        uv.y  -= 0.50;
-        uv.x -= 0.50;
-        double d = distance(uv,new Vec2(0,0));
-
-        return new Vec4(1.0*d,1.0*d,1.0*d,1.0);
-    }
 
     public void plotLine(int x0, int y0,int x1, int y1,Color c){
       plotLine(x0,y0,x1,y1,c.r,c.g,c.b);

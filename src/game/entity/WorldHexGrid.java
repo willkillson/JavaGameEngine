@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import graphics.Screen;
-import graphics.Vec2;
+import graphics.vec.Vec2;
 import graphics.hex.FractionalHex;
 import graphics.hex.Hex;
 import graphics.hex.Layout;

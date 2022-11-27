@@ -60,7 +60,8 @@ public class MouseHandler implements MouseInputListener{
 
   @Override
   public void mouseMoved(MouseEvent e) {
-    // InputEvent newEvent = new InputEvent("mousePressed", e.getX(), e.getY());
-    // eventQue.add(newEvent);
+      InputEvent newEvent = new InputEvent("mouseMoved", e.getX(), e.getY());
+//      System.out.println(e);
+      eventQue.add(newEvent);
   }
 }

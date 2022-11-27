@@ -46,6 +46,9 @@ public class Game {
             while(eventQue.size()>0){
                 InputEvent event = eventQue.pop();
                 switch(event.name){
+                    case "mouseMoved":
+                        this.screen.updateMousePosition(event.position_x,event.position_y);
+                        break;
                     case "mousePressed":
                         if(event.keyText.compareTo("1")==0){
                             //left click
@@ -88,24 +91,25 @@ public class Game {
         }
     }
 
-    public void composeFrame(){
-
-        // Clear the screen buffer.
-        screen.clearFrame();
-
-
-        // Clear the dead units
-        gameObjects.removeIf((e)->{
-            return e.isDead();
-        });
-
-        // Sort the game objects so they render according to their priorities
-        Collections.sort(this.gameObjects);
-
-        for(GameObject u: gameObjects){
-            u.compose();
-        }
+    synchronized public void composeFrame(){
         screen.sudoShader();
+
+//        // Clear the screen buffer.
+//        screen.clearFrame();
+//
+//
+//        // Clear the dead units
+//        gameObjects.removeIf((e)->{
+//            return e.isDead();
+//        });
+//
+//        // Sort the game objects so they render according to their priorities
+//        Collections.sort(this.gameObjects);
+//
+//        for(GameObject u: gameObjects){
+//            u.compose();
+//        }
+
 
     }
 

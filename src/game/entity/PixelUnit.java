@@ -1,6 +1,6 @@
 package game.entity;
 import graphics.Screen;
-import graphics.Vec2;
+import graphics.vec.Vec2;
 import graphics.Color;
 
 public class PixelUnit implements GameObject {

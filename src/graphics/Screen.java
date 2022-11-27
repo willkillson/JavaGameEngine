@@ -24,6 +24,34 @@ public class Screen {
         }
     }
 
+    public void sudoShader(){
+        for(int i = 0;i< this.width/2;i++){
+            for(int j = 0;j< this.height/2;j++){
+                Vec4 fragmentShader = frag(new Vec2(i,j));
+                putPixel(i,j,new Color(
+                        "Shader",
+                        (int)(fragmentShader.x*255),
+                        (int)(fragmentShader.y*255),
+                        (int)(fragmentShader.z*255)));
+            }
+        }
+
+    }
+    private double distance(Vec2 p1, Vec2 p2){
+        return Math.sqrt(Math.pow(p2.x - p1.x,2) + Math.pow(p2.y-p1.y,2));
+    }
+
+    public Vec4 frag(Vec2 uv){
+        uv.x /= this.width;
+        uv.y /= this.height;
+        uv.x *= this.width/this.height;
+        uv.y  -= 0.25;
+        uv.x -= 0.25;
+        double d = distance(uv,new Vec2(0,0));
+
+        return new Vec4(1.0*d,1.0*d,1.0*d,1.0);
+    }
+
     public void plotLine(int x0, int y0,int x1, int y1,Color c){
       plotLine(x0,y0,x1,y1,c.r,c.g,c.b);
     }
@@ -138,7 +166,7 @@ public class Screen {
             int number = r<< 8;
             number = number + g << 8;
             number = number + b;
-            pixels[x + y * width] =  number;
+            pixels[x + (y * width)] =  number;
         }catch(Exception e){
             e.printStackTrace();
         }

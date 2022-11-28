@@ -81,20 +81,6 @@ public class Vec2 {
         return Math.sqrt(Math.pow(this.x,2)+Math.pow(this.y,2));
     }
 
-    /**
-     * https://stackoverflow.com/questions/343584/how-do-i-get-whole-and-fractional-parts-from-double-in-jsp-java
-     * @return
-     */
-    public Vec2 fractional() {
-        double numX = this.x;
-        double numY = this.y;
-        long iPartX = (long)numX;
-        long iPartY = (long)numY;
-        double fPartX =  numX - iPartX;
-        double fPartY =  numY - iPartY;
-        return new Vec2(fPartX, fPartY);
-    }
-
     public Vec2 whole(){
         double numX = this.x;
         double numY = this.y;

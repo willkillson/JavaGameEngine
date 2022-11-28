@@ -1,3 +1,4 @@
+//TODO: ran into issues attempting to implement this, perhaps I need to work on the engine a little more.
 //package graphics.shaders.concrete;
 //
 //import graphics.vec.Vec2;

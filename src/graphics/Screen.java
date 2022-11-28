@@ -1,6 +1,10 @@
 package graphics;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import game.entity.HexObject;
 import graphics.hex.Layout;
@@ -9,6 +13,8 @@ import graphics.hex.Point;
 //import graphics.shaders.concrete.FragmentCircleDemo;
 import graphics.shaders.FragmentShader;
 //import graphics.shaders.concrete.RayMarching;
+import graphics.shaders.concrete.ColorDemo;
+import graphics.shaders.concrete.FragmentCircleDemo;
 import graphics.shaders.concrete.TruchetTiling;
 import graphics.vec.Vec2;
 import graphics.vec.Vec4;
@@ -19,7 +25,7 @@ public class Screen {
     private Vec2 resolution;
     public int width;
     public int height;
-    public int[]pixels;
+    public volatile int[]pixels;
 
     public Screen(int width, int height){
         this.resolution = new Vec2((double)width,(double)height);
@@ -41,50 +47,22 @@ public class Screen {
     }
 
     public void sudoShader(){
-        // Create the fragment shader
-//        FragmentShader fragmentShader1 = new RayMarching(
-//                this.resolution,
-//                this.currentMousePosition);
-//
-//        FragmentShader fragmentShader2 = new FragmentCircleDemo(
-//                this.resolution,
-//                this.currentMousePosition);
-//
-//        FragmentShader fragmentShader3 = new ColorDemo(
-//                this.resolution,
-//                this.currentMousePosition);
 
-        FragmentShader fragmentShader1 = new TruchetTiling(this,1,
-                this.resolution,
-                this.currentMousePosition);
+        Date date = new Date();
+        long time = date.getTime();
 
-        FragmentShader fragmentShader2 = new TruchetTiling(this,2,
+        FragmentShader fragmentShader1 = new ColorDemo(this,1,
                 this.resolution,
-                this.currentMousePosition);
-        FragmentShader fragmentShader3 = new TruchetTiling(this,3,
-                this.resolution,
-                this.currentMousePosition);
-        FragmentShader fragmentShader4 = new TruchetTiling(this,4,
-                this.resolution,
-                this.currentMousePosition);
+                this.currentMousePosition,
+                time);
+
         fragmentShader1.start();
-        fragmentShader2.start();
-        fragmentShader3.start();
-        fragmentShader4.start();
+        try{
+            fragmentShader1.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
-
-//        for(int i = 0;i< this.width;i++){
-//            for(int j = 0;j< this.height;j++){
-//                Vec4 out = fragmentShader4.frag(new Vec2(i,j));
-//                putPixel(
-//                        i,
-//                        j,
-//                        new Color("Shader",
-//                        (int)(out.x*255),
-//                        (int)(out.y*255),
-//                        (int)(out.z*255)));
-//            }
-//        }
 
     }
 

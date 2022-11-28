@@ -89,18 +89,7 @@ public class Vec3 {
         return newVec;
     }
 
-    public static Vec3 normalize(Vec3 value){
-        double magnitude = Math.sqrt(Math.pow(value.x,2)+Math.pow(value.y,2)+Math.pow(value.z,2));
-        Vec3 newVec = new Vec3(value);
-        newVec = newVec.div(magnitude);
-        return newVec;
-    }
 
-    public double length(){
-        return Math.sqrt(
-                Math.pow(this.x,2) + Math.pow(this.y,2) + Math.pow(this.z,2)
-        );
-    }
 
 
 }

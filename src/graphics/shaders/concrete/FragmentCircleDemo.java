@@ -12,8 +12,8 @@ import static graphics.vec.VecMath.smoothStep;
 public class FragmentCircleDemo extends FragmentShader {
 
 
-    public FragmentCircleDemo(Screen screen, int threadNumber, Vec2 resolution, Vec2 currentMousePosition, long time) {
-        super(screen, threadNumber, resolution, currentMousePosition, time);
+    public FragmentCircleDemo(Screen screen, int totalThreads, int threadNumber, Vec2 resolution, Vec2 currentMousePosition, long time) {
+        super(screen, totalThreads, threadNumber, resolution, currentMousePosition, time);
     }
 
     @Override

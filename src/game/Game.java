@@ -91,24 +91,24 @@ public class Game {
         }
     }
 
-    public void composeFrame(){
+    public synchronized void composeFrame(){
 
 
 //        // Clear the screen buffer.
 //        screen.clearFrame();
 //
 //
-        // Clear the dead units
-        gameObjects.removeIf((e)->{
-            return e.isDead();
-        });
-
-        // Sort the game objects so they render according to their priorities
-        Collections.sort(this.gameObjects);
-
-        for(GameObject u: gameObjects){
-            u.compose();
-        }
+//        // Clear the dead units
+//        gameObjects.removeIf((e)->{
+//            return e.isDead();
+//        });
+//
+//        // Sort the game objects so they render according to their priorities
+//        Collections.sort(this.gameObjects);
+//
+//        for(GameObject u: gameObjects){
+//            u.compose();
+//        }
         screen.sudoShader();
 
 

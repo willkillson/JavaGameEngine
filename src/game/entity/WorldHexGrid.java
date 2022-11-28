@@ -281,8 +281,8 @@ public class WorldHexGrid implements GameObject {
       this.redraw = false;
     }
     // Copy all our grid pixels into our screen pixels buffer
-    for(int i = 0;i<screen.pixels.length;i++){
-      screen.pixels[i] = this.gridPixelArray[i];
+    for(int i = 0;i<screen.pixels.length();i++){
+      screen.pixels.set(i,this.gridPixelArray[i]);
     }
   }
 

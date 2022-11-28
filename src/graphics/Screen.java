@@ -1,10 +1,12 @@
 package graphics;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import game.entity.HexObject;
 import graphics.hex.Layout;
@@ -25,14 +27,17 @@ public class Screen {
     private Vec2 resolution;
     public int width;
     public int height;
-    public volatile int[]pixels;
+    public AtomicIntegerArray pixels;
+    public ArrayList<FragmentShader> fragmentShaders;
+
+    public boolean threadsInit = false;
 
     public Screen(int width, int height){
         this.resolution = new Vec2((double)width,(double)height);
         this.currentMousePosition = new Vec2(0.0,0.0);
         this.width = width;
         this.height = height;
-        pixels = new int[width*height];
+        pixels = new AtomicIntegerArray(width * height);
     }
 
     public void updateMousePosition(double x, double y){
@@ -41,27 +46,41 @@ public class Screen {
     }
 
     public void clearFrame(){
-        for(int i = 0;i<   pixels.length;i++){
-            pixels[i] = 0;
+        for(int i = 0;i<   pixels.length();i++){
+            pixels.set(i,0);
         }
     }
 
     public void sudoShader(){
-
         Date date = new Date();
         long time = date.getTime();
+        int totalThreads = 2;
 
-        FragmentShader fragmentShader1 = new ColorDemo(this,1,
-                this.resolution,
-                this.currentMousePosition,
-                time);
-
-        fragmentShader1.start();
-        try{
-            fragmentShader1.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        if(!threadsInit){
+            this.fragmentShaders = new ArrayList<>();
+            for(int i = 0;i< totalThreads;i++){
+                fragmentShaders.add(
+                        new TruchetTiling(
+                                this,
+                                totalThreads,
+                                i,
+                                this.resolution,
+                                this.currentMousePosition,
+                                time)
+                );
+            }
         }
+
+        for(int i = 0;i< totalThreads;i++){
+            fragmentShaders.get(i).start();
+        }
+//        try{
+//            for(int i = 0;i< totalThreads;i++){
+//                fragmentShaders.get(i).join();
+//            }
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
 
 
     }
@@ -182,7 +201,7 @@ public class Screen {
             int number = r<< 8;
             number = number + g << 8;
             number = number + b;
-            pixels[x + (y * width)] =  number;
+            pixels.set(x + (y * width),number);
         }catch(Exception e){
             e.printStackTrace();
         }

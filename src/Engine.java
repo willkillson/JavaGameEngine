@@ -148,7 +148,7 @@ public class Engine extends Canvas implements Runnable{
         }
         // Copy all our screen pixels into our pixels buffer
         for(int i = 0;i<pixels.length;i++){
-            pixels[i] = screen.pixels[i];
+            pixels[i] = screen.pixels.get(i);
         }
         Graphics g = bs.getDrawGraphics();
         g.drawImage(image, 0,0,getWidth(),getHeight(), null);

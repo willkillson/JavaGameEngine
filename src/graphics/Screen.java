@@ -17,6 +17,8 @@ import graphics.shaders.concrete.ColorDemo;
 import graphics.shaders.concrete.FragmentCircleDemo;
 import graphics.shaders.concrete.RayMarching;
 import graphics.shaders.concrete.TruchetTiling;
+import graphics.shaders.concrete.smiley.Circle;
+import graphics.shaders.concrete.smoothstep.SmoothStep;
 import graphics.vec.Vec2;
 import graphics.vec.Vec4;
 
@@ -59,7 +61,7 @@ public class Screen {
 
         // Assign each thread its thread number.
         for(int i = 1;i<=threadCount;i++ ){
-            FragmentShader fragmentShader = new TruchetTiling(
+            FragmentShader fragmentShader = new SmoothStep(
                     this,
                     i,
                     threadCount,

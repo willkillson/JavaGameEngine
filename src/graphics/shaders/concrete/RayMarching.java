@@ -27,7 +27,10 @@ public class RayMarching extends FragmentShader {
     @Override
     public Vec4 frag(Vec2 fragCoord) {
         // Fix aspect ratio so it is square.
-        Vec2 uv = Vec2.minus(fragCoord,0.5).mul(resolution).div(resolution.y);
+        Vec2 uv = Vec2
+                .minus(fragCoord,0.5)
+                .mul(resolution)
+                .div(resolution.y);
 
         Vec3 col = new Vec3(0.0);
 

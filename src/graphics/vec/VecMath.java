@@ -33,6 +33,14 @@ public class VecMath {
         return x * x * (3 - 2 * x);
     }
 
+    public static double GLSLSmoothStep(double edge0, double edge1, double x) {
+        // Clamp x to the range [0, 1]
+        x = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
+
+        // Perform the smoothstep interpolation
+        return x * x * (3 - 2 * x);
+    }
+
     // Vec2
 
 
@@ -78,6 +86,13 @@ public class VecMath {
                 Math.pow(value.x,2) + Math.pow(value.y,2) + Math.pow(value.z,2)
         );
     }
+
+    public static double length(Vec2 value){
+        return Math.sqrt(
+                Math.pow(value.x,2) + Math.pow(value.y,2)
+        );
+    }
+
 
     // Vec4
 }

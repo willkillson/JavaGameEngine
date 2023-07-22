@@ -89,6 +89,32 @@ public class Vec3 {
         return newVec;
     }
 
+    public static Vec3 normalize(Vec3 value) {
+        double magnitude = Math.sqrt(value.x * value.x + value.y * value.y + value.z * value.z);
+        return new Vec3(value.x / magnitude, value.y / magnitude, value.z / magnitude);
+    }
+
+    public static Vec3 add(Vec3 a, Vec3 b){
+        Vec3 newVec = new Vec3(a.x,a.y,a.z);
+        newVec.x += b.x;
+        newVec.y += b.y;
+        newVec.z += b.z;
+        return newVec;
+    }
+
+    public static Vec3 multiply(Vec3 a, double b){
+        Vec3 newVec = new Vec3(a.x,a.y,a.z);
+        newVec.x *= b;
+        newVec.y *= b;
+        newVec.z *= b;
+        return newVec;
+    }
+
+    // Length or magnitude ||value||
+    public double length(){
+        return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+    }
+
 
 
 

@@ -7,8 +7,8 @@ import graphics.vec.Vec4;
 
 public class ColorDemo extends FragmentShader {
 
-    public ColorDemo(Screen screen, int threadNumber, Vec2 resolution, Vec2 currentMousePosition, long time) {
-        super(screen, threadNumber, resolution, currentMousePosition, time);
+    public ColorDemo(Screen screen, int threadNumber,int threadCount, Vec2 resolution, Vec2 currentMousePosition, long time) {
+        super(screen, threadNumber,threadCount, resolution, currentMousePosition, time);
     }
 
     @Override

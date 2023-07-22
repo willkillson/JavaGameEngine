@@ -89,6 +89,26 @@ public class Vec2 {
         return new Vec2(iPartX, iPartY);
     }
 
+    public static Vec2 minus(Vec2 a, Vec2 b){
+        Vec2 newVec = new Vec2(a.x, a.y);
+        newVec.x -= b.x;
+        newVec.y -= b.y;
+        return newVec;
+    }
+
+    public static Vec2 minus(Vec2 a, double value){
+        Vec2 newVec = new Vec2(a.x, a.y);
+        newVec.x -= value;
+        newVec.y -= value;
+        return newVec;
+    }
+
+
+    public String toString(){
+        return "x: "+ x+ " y: "+y;
+    }
+
+
 
 
 

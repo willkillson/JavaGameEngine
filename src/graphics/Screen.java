@@ -15,6 +15,7 @@ import graphics.shaders.FragmentShader;
 //import graphics.shaders.concrete.RayMarching;
 import graphics.shaders.concrete.ColorDemo;
 import graphics.shaders.concrete.FragmentCircleDemo;
+import graphics.shaders.concrete.RayMarching;
 import graphics.shaders.concrete.TruchetTiling;
 import graphics.vec.Vec2;
 import graphics.vec.Vec4;
@@ -38,6 +39,7 @@ public class Screen {
     public void updateMousePosition(double x, double y){
         this.currentMousePosition.x = x;
         this.currentMousePosition.y = y;
+        System.out.println(currentMousePosition.toString());
     }
 
     public void clearFrame(){
@@ -51,19 +53,35 @@ public class Screen {
         Date date = new Date();
         long time = date.getTime();
 
-        FragmentShader fragmentShader1 = new ColorDemo(this,1,
-                this.resolution,
-                this.currentMousePosition,
-                time);
+        int threadCount = 16;
 
-        fragmentShader1.start();
-        try{
-            fragmentShader1.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        ArrayList<FragmentShader> fragmentShaderThreads = new ArrayList<>();
+
+        // Assign each thread its thread number.
+        for(int i = 1;i<=threadCount;i++ ){
+            FragmentShader fragmentShader = new TruchetTiling(
+                    this,
+                    i,
+                    threadCount,
+                    this.resolution,
+                    this.currentMousePosition,
+                    time);
+            fragmentShaderThreads.add(fragmentShader);
         }
 
+        // Start the threads
+        fragmentShaderThreads.forEach((thread)->{
+            thread.start();
+        });
 
+        // Join all the threads.
+        fragmentShaderThreads.forEach((thread)->{
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 
@@ -168,22 +186,22 @@ public class Screen {
         putPixel((int)point.x,(int)point.y,r,g,b);
     }
 
-    public void putPixel(int x, int y, int r, int g, int b){
-
-        if(x<0 || x >= width){
+    public void putPixel(int x, int y, int r, int g, int b) {
+        if (x < 0 || x >= width) {
             return;
         }
 
-        if(y<0 || y >= height ){
+        // Adjust the y coordinate to flip the coordinate system
+        // from top-left origin to bottom-left origin.
+        int newY = height - 1 - y;
+        if (newY < 0 || newY >= height) {
             return;
         }
 
-        try{
-            int number = r<< 8;
-            number = number + g << 8;
-            number = number + b;
-            pixels[x + (y * width)] =  number;
-        }catch(Exception e){
+        try {
+            int number = (r << 16) | (g << 8) | b;
+            pixels[x + (newY * width)] = number;
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

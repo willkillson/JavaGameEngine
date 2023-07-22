@@ -11,8 +11,8 @@ import static java.lang.Math.*;
 
 public class TruchetTiling extends FragmentShader {
 
-    public TruchetTiling(Screen screen, int threadNumber, Vec2 resolution, Vec2 currentMousePosition, long time) {
-        super(screen, threadNumber, resolution, currentMousePosition, time);
+    public TruchetTiling(Screen screen, int threadNumber,int threadCount, Vec2 resolution, Vec2 currentMousePosition, long time) {
+        super(screen, threadNumber,threadCount, resolution, currentMousePosition, time);
     }
 
     @Override
@@ -20,7 +20,7 @@ public class TruchetTiling extends FragmentShader {
         Vec2 uv = fragCoord.div(resolution);
         Vec3 col = new Vec3(0);
 
-        uv = uv.mul(10);
+        uv = uv.mul(sin(fragCoord.x*currentMousePosition.x/1000));
         Vec2 gv = fractional(uv).min(0.5);
         Vec2 id = new Vec2(Math.floor(uv.x), Math.floor(uv.y));
         // returns a random number [0,1]

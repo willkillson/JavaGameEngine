@@ -20,7 +20,7 @@ public class TruchetTiling extends FragmentShader {
         Vec2 uv = fragCoord.div(resolution);
         Vec3 col = new Vec3(0);
 
-        uv = uv.mul(sin(fragCoord.x*currentMousePosition.x/1000));
+        uv = uv.mul(10);
         Vec2 gv = fractional(uv).min(0.5);
         Vec2 id = new Vec2(Math.floor(uv.x), Math.floor(uv.y));
         // returns a random number [0,1]

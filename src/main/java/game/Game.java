@@ -106,15 +106,16 @@ public class Game {
         }
     }
 
-    public void composeFrame() {
+    public void composeFrame(long currentTime) {
         // Clear the screen buffer.
         screen.clearFrame();
 
         // Clear the dead units
         //        composables.removeIf((e) -> e.isDead());
+        screen.sudoShader(currentTime);
 
         root.compose();
 
-        //        screen.sudoShader();
+
     }
 }

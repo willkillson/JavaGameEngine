@@ -119,7 +119,7 @@ public class Engine extends Canvas implements Runnable {
                     accumulator -= updateRate;
                     ups++;
                 }
-                game.composeFrame();
+                game.composeFrame(lastUpdate);
                 render();
                 printStats();
             }

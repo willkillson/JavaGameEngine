@@ -4,7 +4,11 @@ import game.entity.HexObject;
 import graphics.hex.Layout;
 import graphics.hex.Point;
 import graphics.shaders.FragmentShader;
+import graphics.shaders.concrete.ColorDemo;
 import graphics.shaders.concrete.FragmentCircleDemo;
+import graphics.shaders.concrete.RayMarching;
+import graphics.shaders.concrete.TruchetTiling;
+import graphics.shaders.concrete.smoothstep.SmoothStep;
 import graphics.vec.Vec2;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,19 +46,16 @@ public class Screen {
         }
     }
 
-    public void sudoShader() {
-
-        Date date = new Date();
-        long time = date.getTime();
+    public void sudoShader(long time) {
+        Vec2 shaderResolution = new Vec2(128,128);
 
         int threadCount = 16;
 
         ArrayList<FragmentShader> fragmentShaderThreads = new ArrayList<>();
-
         // Assign each thread its thread number.
         for (int i = 1; i <= threadCount; i++) {
             FragmentShader fragmentShader =
-                    new FragmentCircleDemo(this, i, threadCount, this.resolution, this.currentMousePosition, time);
+                    new ColorDemo(this, i, threadCount, shaderResolution, this.currentMousePosition, time);
             fragmentShaderThreads.add(fragmentShader);
         }
 

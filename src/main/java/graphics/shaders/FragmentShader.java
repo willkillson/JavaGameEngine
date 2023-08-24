@@ -27,10 +27,10 @@ public abstract class FragmentShader extends Thread {
     public abstract Vec4 frag(Vec2 fragCoord);
 
     public synchronized void run() {
-        for (int i = screen.width / threadCount * (threadNumber - 1);
-                i < screen.width / threadCount * threadNumber;
-                i++) {
-            for (int j = 0; j < screen.height; j++) {
+        for (int i = (int) (resolution.x / threadCount * (threadNumber - 1));
+             i < resolution.x / threadCount * threadNumber;
+             i++) {
+            for (int j = 0; j < resolution.y; j++) {
                 Vec4 out = frag(new Vec2(i, j));
                 screen.putPixel(
                         i, j, new Color("Shader", (int) (out.x * 255), (int) (out.y * 255), (int) (out.z * 255)));

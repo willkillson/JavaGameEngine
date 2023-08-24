@@ -16,7 +16,7 @@ public class ColorDemo extends FragmentShader {
     public Vec4 frag(Vec2 fragCoord) {
         Vec2 uv = fragCoord.div(resolution);
         uv = uv.min(0.5);
-        uv = uv.add(currentMousePosition.div(resolution));
+        uv.add(currentMousePosition.div(resolution));
         return new Vec4(uv.x, uv.y, 0, 0);
     }
 }

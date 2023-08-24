@@ -7,7 +7,6 @@ import graphics.hex.Hex;
 import graphics.hex.Layout;
 import graphics.hex.Orientation;
 import graphics.hex.Point;
-import graphics.vec.Vec2;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -18,7 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-public class WorldHexGrid implements GameObject {
+public class WorldHexGrid implements Composable {
 
     private Screen screen;
     private Orientation orientation;
@@ -49,7 +48,7 @@ public class WorldHexGrid implements GameObject {
 
     // sm.scaledPA
 
-    public void desintegrateHex(HexObject hex, ArrayList<GameObject> gameObjects) {
+    public void desintegrateHex(HexObject hex, ArrayList<Composable> composables) {
         Point point = layout.hexToPixel(hex);
         this.helperDesintegrate(
                 sm.getScaledPA(hex.type),
@@ -57,7 +56,7 @@ public class WorldHexGrid implements GameObject {
                 (int) point.y,
                 sm.getWidth(hex.type),
                 sm.getHeight(hex.type),
-                gameObjects);
+                composables);
     }
 
     public Point desintegrate1(int k, int arrayWidth, int height, int arrayHeight) {
@@ -95,7 +94,8 @@ public class WorldHexGrid implements GameObject {
             int y_pos,
             int arrayWidth,
             int arrayHeight,
-            ArrayList<GameObject> gameObjects) {
+            ArrayList<Composable> composables) {
+
         int height = 0;
         int width = 1920;
         int center_x_pos = x_pos - arrayWidth / 2;
@@ -117,12 +117,14 @@ public class WorldHexGrid implements GameObject {
                                             // Point p = desintegrate1(k,arrayWidth, height, arrayHeight);
                                             // PerPixel desintegrate
                                             Point p = desintegrate2(k, arrayWidth, height, arrayHeight);
-
-                                            gameObjects.add(new PixelUnit(
-                                                    screen,
-                                                    new Vec2(k + center_x_pos, height + center_y_pos),
-                                                    new Vec2(p.x, p.y),
-                                                    sourcePixels[k + height * arrayWidth]));
+                                            // TODO:
+                                            //                                            composables.add(new PixelUnit(
+                                            //                                                    screen,
+                                            //                                                    new Vec2(k +
+                                            // center_x_pos, height + center_y_pos),
+                                            //                                                    new Vec2(p.x, p.y),
+                                            //                                                    sourcePixels[k +
+                                            // height * arrayWidth]));
                                         }
                                     }
                                 }
@@ -155,12 +157,12 @@ public class WorldHexGrid implements GameObject {
                 sm.getHeight(roundedHex.type));
     }
 
-    public void deleteHex(Point position, ArrayList<GameObject> gameObjects) {
+    public void deleteHex(Point position, ArrayList<Composable> composables) {
         FractionalHex fHex = this.layout.pixelToHex(position);
         Hex roundedHex = layout.hexRound(fHex);
         this.hexs.removeIf((hex) -> {
             if (hex.equals(roundedHex)) {
-                this.desintegrateHex(hex, gameObjects);
+                this.desintegrateHex(hex, composables);
             }
             return hex.equals(roundedHex);
         });
@@ -258,11 +260,6 @@ public class WorldHexGrid implements GameObject {
     }
 
     @Override
-    public void update() {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
     public void compose() {
         if (this.redraw) {
             this.clearFrame();
@@ -286,19 +283,8 @@ public class WorldHexGrid implements GameObject {
     }
 
     @Override
-    public int getDrawPriority() {
-        return 0;
-    }
-
-    @Override
-    public int compareTo(GameObject o) {
-        if (this.getDrawPriority() == o.getDrawPriority()) {
-            return 0;
-        } else if (this.getDrawPriority() < o.getDrawPriority()) {
-            return -1;
-        } else {
-            return 1;
-        }
+    public int compareTo(Composable o) {
+        return 1;
     }
 
     @Override

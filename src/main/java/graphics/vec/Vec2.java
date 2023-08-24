@@ -34,11 +34,9 @@ public class Vec2 {
         return newV2;
     }
 
-    public Vec2 add(Vec2 value) {
-        Vec2 newV2 = new Vec2(this.x, this.y);
-        newV2.x += value.x;
-        newV2.y += value.y;
-        return newV2;
+    public void add(Vec2 value) {
+        this.x += value.x;
+        this.y += value.y;
     }
 
     public void sub(double value) {

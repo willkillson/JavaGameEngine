@@ -22,18 +22,15 @@ public class MouseHandler implements MouseInputListener {
     @Override
     public void mousePressed(MouseEvent e) {
         InputEvent newEvent = new InputEvent("mousePressed", e.getX(), e.getY());
-        System.out.println(e);
         newEvent.keyText = Integer.toString(e.getButton());
         eventQue.add(newEvent);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (isDragging == true) {
-            InputEvent newEvent = new InputEvent("mouseReleased", e.getX(), e.getY());
-            eventQue.add(newEvent);
-            isDragging = false;
-        }
+        InputEvent newEvent = new InputEvent("mouseReleased", e.getX(), e.getY());
+        eventQue.add(newEvent);
+        isDragging = false;
     }
 
     @Override
@@ -50,17 +47,13 @@ public class MouseHandler implements MouseInputListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (isDragging == false) {
-            InputEvent newEvent = new InputEvent("mousePressed", e.getX(), e.getY());
-            eventQue.add(newEvent);
-            isDragging = true;
-        }
+        InputEvent newEvent = new InputEvent("mouseMoved", e.getX(), e.getY());
+        eventQue.add(newEvent);
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
         InputEvent newEvent = new InputEvent("mouseMoved", e.getX(), e.getY());
-        //      System.out.println(e);
         eventQue.add(newEvent);
     }
 }

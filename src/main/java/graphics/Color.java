@@ -1,8 +1,7 @@
 package graphics;
 
 public class Color {
-
-    String colorName;
+    public String colorName;
     public int r;
     public int g;
     public int b;
@@ -38,5 +37,9 @@ public class Color {
         this.rgb = r << 8;
         this.rgb = this.rgb + g << 8;
         this.rgb = this.rgb + b;
+    }
+
+    public static Color RED() {
+        return new Color("Red", 255, 0, 0);
     }
 }

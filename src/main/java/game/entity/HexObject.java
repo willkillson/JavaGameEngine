@@ -2,7 +2,7 @@ package game.entity;
 
 import graphics.hex.Hex;
 
-public class HexObject extends Hex implements GameObject {
+public class HexObject extends Hex implements Composable {
 
     public String type;
     public boolean isDead;
@@ -20,31 +20,14 @@ public class HexObject extends Hex implements GameObject {
     }
 
     @Override
-    public int compareTo(GameObject o) {
-        if (this.getDrawPriority() == o.getDrawPriority()) {
-            return 0;
-        } else if (this.getDrawPriority() < o.getDrawPriority()) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
-
-    @Override
-    public void update() {
-        // TODO Auto-generated method stub
-
+    public int compareTo(Composable o) {
+        return 1;
     }
 
     @Override
     public void compose() {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public int getDrawPriority() {
-        return 0;
     }
 
     @Override

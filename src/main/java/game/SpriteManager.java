@@ -20,6 +20,9 @@ public class SpriteManager {
         scaledPA = new HashMap<String, int[]>();
         try {
             rawBI.put("water_hex", ImageLoader.loadImage(spritePath.resolve("water_hex_tile_1000.png")));
+            rawBI.put("plains_hex", ImageLoader.loadImage(spritePath.resolve("plains2_hex.png")));
+            rawBI.put("player_yellow", ImageLoader.loadImage(spritePath.resolve("player_yellow_hex.png")));
+            rawBI.put("empty_hex", ImageLoader.loadImage(spritePath.resolve("empty_hex_tile_1000.png")));
         } catch (Exception e) {
             e.printStackTrace();
         }

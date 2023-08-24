@@ -1,9 +1,11 @@
 package input;
 
-public class InputEvent {
+import graphics.vec.Vec2;
 
+public class InputEvent {
     public String name;
     public String keyText;
+    public Vec2 position;
     public int position_x;
     public int position_y;
 
@@ -11,6 +13,7 @@ public class InputEvent {
         this.name = name;
         this.position_x = position_x;
         this.position_y = position_y;
+        this.position = new Vec2(position_x, position_y);
         this.keyText = "";
     }
 

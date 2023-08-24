@@ -46,12 +46,14 @@ public class Engine extends Canvas implements Runnable {
         Dimension size = new Dimension(width * scale, height * scale);
         setPreferredSize(size);
 
-        screen = new Screen(width, height);
-        frame = new JFrame();
+        this.screen = new Screen(width, height);
+        this.frame = new JFrame();
 
         this.inputEventQue = new Stack<InputEvent>();
         this.mouseHandler = new MouseHandler(inputEventQue);
         this.keyHandler = new KeyHandler(inputEventQue);
+        this.game = new Game(screen, this.inputEventQue);
+        this.game.init();
 
         this.addMouseListener(this.mouseHandler);
         this.addMouseMotionListener(this.mouseHandler);
@@ -70,7 +72,7 @@ public class Engine extends Canvas implements Runnable {
         System.setOut(ps);
         //        System.setErr( ps );
 
-        ta.addKeyListener(new ConsoleHandler(inputEventQue));
+        ta.addKeyListener(new ConsoleHandler(inputEventQue, this.game));
         p.add(new JScrollPane(ta), BorderLayout.SOUTH);
         frame.add(p);
 
@@ -98,8 +100,6 @@ public class Engine extends Canvas implements Runnable {
 
     @Override
     public void run() {
-        game = new Game(screen, this.inputEventQue);
-        game.init();
         running = true;
         double accumulator = 0;
 
@@ -128,7 +128,7 @@ public class Engine extends Canvas implements Runnable {
 
     private void printStats() {
         if (System.currentTimeMillis() > nextStateTime) {
-            System.out.println(String.format("FPS: %d, UPS: %d", fps, ups));
+            //            System.out.println(String.format("FPS: %d, UPS: %d", fps, ups));
             fps = 0;
             ups = 0;
             nextStateTime = System.currentTimeMillis() + 1000;

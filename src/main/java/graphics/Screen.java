@@ -25,6 +25,12 @@ public class Screen {
         pixels = new int[width * height];
     }
 
+    public static Vec2 ScreenTooWorldCoord(Vec2 screenCoord, Vec2 worldCoord) {
+        Vec2 screenTooWorldCoord = new Vec2(screenCoord.x, screenCoord.y);
+
+        return screenTooWorldCoord.min(worldCoord);
+    }
+
     public void updateMousePosition(double x, double y) {
         this.currentMousePosition.x = x;
         this.currentMousePosition.y = y;
@@ -154,6 +160,32 @@ public class Screen {
 
     public void putPixel(Vec2 point, int r, int g, int b) {
         putPixel((int) point.x, (int) point.y, r, g, b);
+    }
+
+    public void putPixel(int x, int y, int r, int g, int b, boolean invert) {
+        if (x < 0 || x >= width) {
+            return;
+        }
+
+        // Adjust the y coordinate to flip the coordinate system
+        // from top-left origin to bottom-left origin.
+        int newY = 0;
+        if (invert) {
+            newY = height - 1 - y;
+        } else {
+            newY = y;
+        }
+
+        if (newY < 0 || newY >= height) {
+            return;
+        }
+
+        try {
+            int number = (r << 16) | (g << 8) | b;
+            pixels[x + (newY * width)] = number;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void putPixel(int x, int y, int r, int g, int b) {

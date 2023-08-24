@@ -1,46 +1,48 @@
 package game.entity;
 
+import game.GameObject;
 import graphics.Color;
 import graphics.Screen;
 import graphics.vec.Vec2;
 
-public class PixelUnit implements GameObject {
+public class PixelUnit extends GameObject {
 
     private Screen screen;
 
     public boolean isDead;
 
-    private double posX; // topLeftmost point of bound
-    private double posY; // topLeftmost point of bound
-
-    private double vx;
-    private double vy;
+    private Vec2 velocity;
 
     private Color color;
 
     public PixelUnit(Screen screen, Vec2 position, Vec2 velocity, Color rgb) {
-
+        super();
         this.screen = screen;
+        this.setPosition(position);
 
-        this.posX = position.x;
-        this.posY = position.y;
+        double r1 = Math.random();
+        double r2 = Math.random();
 
-        this.vx = velocity.x;
-        this.vy = velocity.y;
+        double ur = 1.0;
+        if (r1 > 0.5) {
+            ur = -1.0;
+        }
+        double lr = 1.0;
+        if (r2 > 0.5) {
+            lr = -1.0;
+        }
+
+        this.velocity = new Vec2(r1 * 2 * ur, r2 * 2 * lr);
         this.color = rgb;
-
         this.isDead = false;
     }
 
     public PixelUnit(Screen screen, Vec2 position, Vec2 velocity, int intRGB) {
+        super();
 
         this.screen = screen;
-
-        this.posX = position.x;
-        this.posY = position.y;
-
-        this.vx = velocity.x;
-        this.vy = velocity.y;
+        this.setPosition(position);
+        this.velocity = new Vec2(velocity.x, velocity.y);
 
         int red = (intRGB >> 16) & 0xFF;
         int green = (intRGB >> 8) & 0xFF;
@@ -51,72 +53,45 @@ public class PixelUnit implements GameObject {
         this.isDead = false;
     }
 
-    public void rePosition(Vec2 newPos) {
-        posX = newPos.x;
-        posY = newPos.y;
-    }
-
     @Override
     public void update() {
-        this.posX += vx;
-        this.posY += vy;
+        super.children.forEach((child) -> child.update());
 
-        if (this.posX > screen.width) {
-            // this.vx = this.vx*-1;
-            // while(this.posX>screen.width){
-            //     this.posX= this.posX+vx*2;
-            // }
-            // this.color.b = (int) ((int)255*Math.random());
-            this.isDead = true;
-        }
-        if (this.posX < 0) {
-            // this.vx = this.vx*-1;
-            // while(this.posX<0){
-            //     this.posX= this.posX+vx*2;
-            // }
-            // this.color.b = (int) ((int)255*Math.random());
-            this.isDead = true;
-        }
-
-        if (this.posY >= screen.height - 1) {
-            // vy = -vy;
-            // this.posY= this.posY+vy*2;
-            // this.color.g = (int) ((int)255*Math.random());
-            this.isDead = true;
-        }
-        if (this.posY < 0) {
-            // vy = -vy;
-            // this.posY = this.posY+vy*2;
-            // this.color.r = (int) ((int)255*Math.random());
-            this.isDead = true;
-        }
+        Vec2 newPosition = this.getLocalPosition();
+        newPosition.add(velocity);
+        this.setPosition(newPosition);
     }
 
     @Override
     public void compose() {
-        if (!this.isDead) {
-            screen.putPixel((int) this.posX, (int) this.posY, this.color.r, this.color.g, this.color.b);
-        }
+        super.children.forEach((child) -> child.compose());
+
+        screen.putPixel(
+                (int) this.getWorldPosition().x,
+                (int) this.getWorldPosition().y,
+                this.color.r,
+                this.color.g,
+                this.color.b,
+                false);
     }
 
-    @Override
-    public int getDrawPriority() {
-        return 1;
-    }
-
-    @Override
-    public int compareTo(GameObject o) {
-        if (this.getDrawPriority() == o.getDrawPriority()) {
-            return 0;
-        } else if (this.getDrawPriority() < o.getDrawPriority()) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
-
-    @Override
-    public boolean isDead() {
-        return this.isDead;
-    }
+    //    @Override
+    //    public void kill() {
+    //        double random = Math.random();
+    //        int y;
+    //        int x;
+    //        if(random > 0.5){
+    //            y = -1;
+    //        }else{
+    //            y = 1;
+    //        }
+    //        random = Math.random();
+    //        if(random > 0.5){
+    //            x = -1;
+    //        }else{
+    //            x = 1;
+    //        }
+    //        this.vx = x*Math.random()*5 + 1;
+    //        this.vy = y*Math.random()*5 + 1;
+    //    }
 }

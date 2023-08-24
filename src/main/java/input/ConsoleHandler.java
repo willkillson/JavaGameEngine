@@ -1,5 +1,6 @@
 package input;
 
+import game.Game;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Stack;
@@ -8,9 +9,11 @@ public class ConsoleHandler implements KeyListener {
 
     public Stack<InputEvent> eventQue;
     String input = "";
+    private Game game;
 
-    public ConsoleHandler(Stack<input.InputEvent> inputEventQue) {
+    public ConsoleHandler(Stack<input.InputEvent> inputEventQue, Game game) {
         this.eventQue = inputEventQue;
+        this.game = game;
     }
 
     @Override
@@ -45,6 +48,9 @@ public class ConsoleHandler implements KeyListener {
                 System.out.println("---> map.load.map_name");
                 System.out.println("---> map.save.map_name");
                 break;
+            }
+            case "kill": {
+                game.kill();
             }
             case "map": {
                 if (arrayStrings.length == 3) {

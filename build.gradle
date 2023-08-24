@@ -5,10 +5,12 @@
  * To learn more about Gradle by exploring our Samples at https://docs.gradle.org/8.3/samples
  */
 
+//spotlessLibVersion = '6.20.0'
 
 plugins{
     id 'java'
     id 'application'
+    id 'com.diffplug.spotless' version '6.20.0'
 }
 
 repositories {
@@ -21,9 +23,24 @@ application {
 //
 //applicationDefaultJvmArgs = ["-Dgreeting.language=en"]
 
-
 dependencies {
     // https://mvnrepository.com/artifact/org.json/json
     implementation group: 'org.json', name: 'json', version: '20230618'
+    implementation("com.diffplug.spotless:spotless-plugin-gradle:6.20.0")
+
 }
 
+
+spotless {
+    java {
+        target fileTree('.') {
+            include '**/*.java'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        toggleOffOn()
+        palantirJavaFormat()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}

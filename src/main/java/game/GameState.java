@@ -1,19 +1,16 @@
 package game;
 
+import game.entity.HexObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import game.entity.HexObject;
-
 public class GameState {
 
-  Map<String, ArrayList<HexObject>> players;
+    Map<String, ArrayList<HexObject>> players;
 
-  public GameState(){
+    public GameState() {
 
-    this.players = new HashMap<String, ArrayList<HexObject>>();
-
-  }
-  
+        this.players = new HashMap<String, ArrayList<HexObject>>();
+    }
 }

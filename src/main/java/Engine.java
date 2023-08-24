@@ -4,15 +4,15 @@ import input.ConsoleHandler;
 import input.InputEvent;
 import input.KeyHandler;
 import input.MouseHandler;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.PrintStream;
 import java.util.Stack;
+import javax.swing.*;
 
-public class Engine extends Canvas implements Runnable{
+public class Engine extends Canvas implements Runnable {
 
     public static int width = 1920;
     public static int height = 1080;
@@ -26,27 +26,27 @@ public class Engine extends Canvas implements Runnable{
     private MouseHandler mouseHandler;
     private KeyHandler keyHandler;
 
-    //Game Time
-    private final double updateRate = 1.0d/60.0d;
+    // Game Time
+    private final double updateRate = 1.0d / 60.0d;
     private long nextStateTime;
     private int fps;
     private int ups;
 
     Game game;
     private Screen screen;
-    private BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
-    private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+    private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
     public static void main(String[] args) {
         new Engine();
     }
 
-    public Engine(){
+    public Engine() {
 
-        Dimension size = new Dimension(width*scale,height*scale);
+        Dimension size = new Dimension(width * scale, height * scale);
         setPreferredSize(size);
 
-        screen = new Screen(width,height);
+        screen = new Screen(width, height);
         frame = new JFrame();
 
         this.inputEventQue = new Stack<InputEvent>();
@@ -61,19 +61,19 @@ public class Engine extends Canvas implements Runnable{
 
         JPanel p = new JPanel();
         p.setLayout(new BorderLayout());
-        p.add(this,BorderLayout.CENTER);
-        
+        p.add(this, BorderLayout.CENTER);
+
         //// Console
-        JTextArea ta = new JTextArea(10,5);
-        TextAreaOutputStream taos = new TextAreaOutputStream( ta, 60 );
-        PrintStream ps = new PrintStream( taos );
-        System.setOut( ps );
-        System.setErr( ps );
+        JTextArea ta = new JTextArea(10, 5);
+        TextAreaOutputStream taos = new TextAreaOutputStream(ta, 60);
+        PrintStream ps = new PrintStream(taos);
+        System.setOut(ps);
+        //        System.setErr( ps );
 
         ta.addKeyListener(new ConsoleHandler(inputEventQue));
-        p.add(new JScrollPane(ta),BorderLayout.SOUTH);
+        p.add(new JScrollPane(ta), BorderLayout.SOUTH);
         frame.add(p);
-        
+
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -81,18 +81,17 @@ public class Engine extends Canvas implements Runnable{
         start();
     }
 
-    public synchronized void start(){
-        
+    public synchronized void start() {
+
         thread = new Thread(this, "Display");
         thread.start();
     }
 
-    public synchronized void stop(){
+    public synchronized void stop() {
         running = false;
-        try{
+        try {
             thread.join();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -108,29 +107,27 @@ public class Engine extends Canvas implements Runnable{
         long lastUpdate = currentTime;
 
         // Main game loop
-        while(running){
+        while (running) {
             currentTime = System.currentTimeMillis();
-            double lastRenderTimeInSeconds = (currentTime - lastUpdate)/ 1000d;
+            double lastRenderTimeInSeconds = (currentTime - lastUpdate) / 1000d;
             accumulator += lastRenderTimeInSeconds;
             lastUpdate = currentTime;
 
-            if(accumulator >= updateRate){
-                while(accumulator>updateRate){
+            if (accumulator >= updateRate) {
+                while (accumulator > updateRate) {
                     game.update();
-                    accumulator-=updateRate;
+                    accumulator -= updateRate;
                     ups++;
                 }
                 game.composeFrame();
                 render();
                 printStats();
             }
-
-
         }
     }
 
-    private void printStats(){
-        if(System.currentTimeMillis()>nextStateTime){
+    private void printStats() {
+        if (System.currentTimeMillis() > nextStateTime) {
             System.out.println(String.format("FPS: %d, UPS: %d", fps, ups));
             fps = 0;
             ups = 0;
@@ -138,19 +135,19 @@ public class Engine extends Canvas implements Runnable{
         }
     }
 
-    public void render(){
+    public void render() {
         fps++;
         BufferStrategy bs = getBufferStrategy();
-        if(bs==null){
-            createBufferStrategy(3);//triple buffering
+        if (bs == null) {
+            createBufferStrategy(3); // triple buffering
             return;
         }
         // Copy all our screen pixels into our pixels buffer
-        for(int i = 0;i<pixels.length;i++){
+        for (int i = 0; i < pixels.length; i++) {
             pixels[i] = screen.pixels[i];
         }
         Graphics g = bs.getDrawGraphics();
-        g.drawImage(image, 0,0,getWidth(),getHeight(), null);
+        g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
         g.dispose();
         bs.show();
     }

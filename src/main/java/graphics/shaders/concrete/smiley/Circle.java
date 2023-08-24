@@ -3,22 +3,16 @@ package graphics.shaders.concrete.smiley;
 import graphics.Screen;
 import graphics.shaders.FragmentShader;
 import graphics.vec.Vec2;
-import graphics.vec.Vec3;
 import graphics.vec.Vec4;
 import graphics.vec.VecMath;
 
 public class Circle extends FragmentShader {
 
-
     public Circle(
-            Screen screen,
-            int threadNumber,
-            int threadCount,
-            Vec2 resolution,
-            Vec2 currentMousePosition,
-            long time) {
-        super(screen, threadNumber,threadCount, resolution, currentMousePosition, time);
+            Screen screen, int threadNumber, int threadCount, Vec2 resolution, Vec2 currentMousePosition, long time) {
+        super(screen, threadNumber, threadCount, resolution, currentMousePosition, time);
     }
+
     @Override
     public Vec4 frag(Vec2 fragCoord) {
 
@@ -34,14 +28,14 @@ public class Circle extends FragmentShader {
         assert uv.x <= 0.5 : "x dem is incorrect";
         assert uv.x >= -0.5 : "x dem is incorrect";
 
-        uv.x *= resolution.x/resolution.y;
+        uv.x *= resolution.x / resolution.y;
 
         double d = uv.length();
         double r = 0.5;
 
-        double c = VecMath.smoothStep(r,r-currentMousePosition.x/1000 ,d);
+        double c = VecMath.smoothStep(r, r - currentMousePosition.x / 1000, d);
 
-        Vec4 out = new Vec4(c,c,c,0);
+        Vec4 out = new Vec4(c, c, c, 0);
         return out;
     }
 }

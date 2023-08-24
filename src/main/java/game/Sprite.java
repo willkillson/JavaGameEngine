@@ -1,9 +1,3 @@
 package game;
 
-public class Sprite {
-
-
-
-
-  
-}
+public class Sprite {}

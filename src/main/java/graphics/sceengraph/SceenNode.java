@@ -1,5 +1,3 @@
 package graphics.sceengraph;
 
-public class SceenNode {
-  
-}
+public class SceenNode {}

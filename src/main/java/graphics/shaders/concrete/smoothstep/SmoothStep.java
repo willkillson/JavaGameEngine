@@ -7,7 +7,6 @@ import graphics.vec.Vec3;
 import graphics.vec.Vec4;
 import graphics.vec.VecMath;
 
-
 /**
  * Start with a parabola,
  * a = x^2
@@ -30,22 +29,19 @@ import graphics.vec.VecMath;
  */
 public class SmoothStep extends FragmentShader {
 
-    public SmoothStep(Screen screen, int threadNumber, int threadCount, Vec2 resolution, Vec2 currentMousePosition, long time) {
+    public SmoothStep(
+            Screen screen, int threadNumber, int threadCount, Vec2 resolution, Vec2 currentMousePosition, long time) {
         super(screen, threadNumber, threadCount, resolution, currentMousePosition, time);
     }
 
     @Override
     public Vec4 frag(Vec2 fragCoord) {
-        Vec2 uv = fragCoord.div(resolution); //[0,1]
+        Vec2 uv = fragCoord.div(resolution); // [0,1]
         Vec3 c = new Vec3(0);
 
-        double m = VecMath.GLSLSmoothStep(
-                currentMousePosition.x/1000,
-                currentMousePosition.y/1000,
-                uv.x);
+        double m = VecMath.GLSLSmoothStep(currentMousePosition.x / 1000, currentMousePosition.y / 1000, uv.x);
         c = c.add(m);
 
-
-        return new Vec4(c,0.0);
+        return new Vec4(c, 0.0);
     }
 }

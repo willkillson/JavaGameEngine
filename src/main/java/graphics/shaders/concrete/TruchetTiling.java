@@ -1,18 +1,19 @@
 package graphics.shaders.concrete;
 
+import static graphics.vec.VecMath.*;
+import static java.lang.Math.*;
+
 import graphics.Screen;
 import graphics.shaders.FragmentShader;
 import graphics.vec.Vec2;
 import graphics.vec.Vec3;
 import graphics.vec.Vec4;
 
-import static graphics.vec.VecMath.*;
-import static java.lang.Math.*;
-
 public class TruchetTiling extends FragmentShader {
 
-    public TruchetTiling(Screen screen, int threadNumber,int threadCount, Vec2 resolution, Vec2 currentMousePosition, long time) {
-        super(screen, threadNumber,threadCount, resolution, currentMousePosition, time);
+    public TruchetTiling(
+            Screen screen, int threadNumber, int threadCount, Vec2 resolution, Vec2 currentMousePosition, long time) {
+        super(screen, threadNumber, threadCount, resolution, currentMousePosition, time);
     }
 
     @Override
@@ -28,25 +29,24 @@ public class TruchetTiling extends FragmentShader {
 
         double width = 0.01;
         // Random Flipping
-        if(n <.5){
+        if (n < .5) {
             gv.x *= -1;
         }
 
-        double d= abs(gv.x+gv.y);
-        double mask = 1-smoothStep(0.01,-0.01, d-width);
+        double d = abs(gv.x + gv.y);
+        double mask = 1 - smoothStep(0.01, -0.01, d - width);
         col = col.add(mask);
 
         //// Draws boxes around
-        //if ((gv.x >.48)||(gv.y>.48)){
+        // if ((gv.x >.48)||(gv.y>.48)){
         //    col = col.add(new Vec3(1,0,0));
-        //}
-        return new Vec4(col,1.0);
+        // }
+        return new Vec4(col, 1.0);
     }
 
-    double hash21(Vec2 p){
+    double hash21(Vec2 p) {
         p = fractional(p.mul(new Vec2(234.34, 435.345)));
-        p = p.add(dot(p,p.add(34.23)));
-        return fractional(p.x*p.y);
+        p = p.add(dot(p, p.add(34.23)));
+        return fractional(p.x * p.y);
     }
-
 }

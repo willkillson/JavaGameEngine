@@ -1,25 +1,17 @@
 package graphics.shaders.concrete;
 
+import static graphics.vec.VecMath.smoothStep;
+
 import graphics.Screen;
+import graphics.shaders.FragmentShader;
 import graphics.vec.Vec2;
 import graphics.vec.Vec4;
-import graphics.shaders.FragmentShader;
-
-import java.util.concurrent.CountDownLatch;
-
-import static graphics.vec.VecMath.smoothStep;
 
 public class FragmentCircleDemo extends FragmentShader {
 
-
     public FragmentCircleDemo(
-            Screen screen,
-            int threadNumber,
-            int threadCount,
-            Vec2 resolution,
-            Vec2 currentMousePosition,
-            long time) {
-        super(screen, threadNumber,threadCount, resolution, currentMousePosition, time);
+            Screen screen, int threadNumber, int threadCount, Vec2 resolution, Vec2 currentMousePosition, long time) {
+        super(screen, threadNumber, threadCount, resolution, currentMousePosition, time);
     }
 
     @Override
@@ -32,17 +24,17 @@ public class FragmentCircleDemo extends FragmentShader {
         fragCoord.x *= ratio;
         // Set UV coordinates between [-1,1]
         fragCoord.y -= 0.50;
-        fragCoord.x -= (0.5*ratio);
+        fragCoord.x -= (0.5 * ratio);
 
-        double circle = circle(fragCoord,new Vec2(0,0),0.3,0.1);
-        Vec4 out = new Vec4(1-circle,0.0,0.0,1.0);
+        double circle = circle(fragCoord, new Vec2(0, 0), 0.3, 0.1);
+        Vec4 out = new Vec4(1 - circle, 0.0, 0.0, 1.0);
 
         return out;
     }
 
-    public double circle(Vec2 uv, Vec2 position, double r, double blur){
+    public double circle(Vec2 uv, Vec2 position, double r, double blur) {
         double d = uv.min(position).length();
-        double c = smoothStep(r,r-blur, d);
+        double c = smoothStep(r, r - blur, d);
         return c;
     }
 }

@@ -1,5 +1,3 @@
 package game;
 
-public class HexGride {
-  
-}
+public class HexGride {}

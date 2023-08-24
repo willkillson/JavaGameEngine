@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.PrintStream;
 import java.util.Stack;
-import javax.sound.sampled.*;
 
 public class Engine extends Canvas implements Runnable{
 

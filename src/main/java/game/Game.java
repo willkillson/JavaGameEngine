@@ -37,7 +37,7 @@ public class Game {
         this.processEventQue();
 
         for(GameObject u: gameObjects){
-            u.update();
+//            u.update();
         }
     }
 
@@ -95,7 +95,7 @@ public class Game {
 
 
 //        // Clear the screen buffer.
-//        screen.clearFrame();
+        screen.clearFrame();
 //
 //
         // Clear the dead units

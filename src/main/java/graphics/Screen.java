@@ -2,25 +2,12 @@ package graphics;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import game.entity.HexObject;
 import graphics.hex.Layout;
 import graphics.hex.Point;
-//import graphics.shaders.concrete.ColorDemo;
-//import graphics.shaders.concrete.FragmentCircleDemo;
 import graphics.shaders.FragmentShader;
-//import graphics.shaders.concrete.RayMarching;
-import graphics.shaders.concrete.ColorDemo;
 import graphics.shaders.concrete.FragmentCircleDemo;
-import graphics.shaders.concrete.RayMarching;
-import graphics.shaders.concrete.TruchetTiling;
-import graphics.shaders.concrete.smiley.Circle;
-import graphics.shaders.concrete.smoothstep.SmoothStep;
 import graphics.vec.Vec2;
-import graphics.vec.Vec4;
 
 public class Screen {
 
@@ -41,7 +28,6 @@ public class Screen {
     public void updateMousePosition(double x, double y){
         this.currentMousePosition.x = x;
         this.currentMousePosition.y = y;
-        System.out.println(currentMousePosition.toString());
     }
 
     public void clearFrame(){
@@ -61,7 +47,7 @@ public class Screen {
 
         // Assign each thread its thread number.
         for(int i = 1;i<=threadCount;i++ ){
-            FragmentShader fragmentShader = new SmoothStep(
+            FragmentShader fragmentShader = new FragmentCircleDemo(
                     this,
                     i,
                     threadCount,
@@ -85,8 +71,6 @@ public class Screen {
             }
         });
     }
-
-
 
     public void plotLine(int x0, int y0,int x1, int y1,Color c){
       plotLine(x0,y0,x1,y1,c.r,c.g,c.b);

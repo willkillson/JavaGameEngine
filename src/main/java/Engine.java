@@ -53,7 +53,6 @@ public class Engine extends Canvas implements Runnable {
         this.mouseHandler = new MouseHandler(inputEventQue);
         this.keyHandler = new KeyHandler(inputEventQue);
         this.game = new Game(screen, this.inputEventQue);
-        this.game.init();
 
         this.addMouseListener(this.mouseHandler);
         this.addMouseMotionListener(this.mouseHandler);

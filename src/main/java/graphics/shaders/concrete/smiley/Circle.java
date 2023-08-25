@@ -33,7 +33,7 @@ public class Circle extends FragmentShader {
         double d = uv.length();
         double r = 0.5;
 
-        double c = VecMath.smoothStep(r, r - currentMousePosition.x / 1000, d);
+        double c = 1 - VecMath.smoothStep(r, r - position.x / 1000, d);
 
         Vec4 out = new Vec4(c, c, c, 0);
         return out;

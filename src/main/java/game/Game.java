@@ -1,12 +1,15 @@
 package game;
 
-import game.entity.PixelUnit;
-import game.entity.WorldHexGrid;
+import game.object.GameObject;
+import game.object.concrete.Colors;
+import game.object.concrete.PixelUnit;
+import game.object.concrete.Player;
 import graphics.Color;
 import graphics.Screen;
 import graphics.vec.Vec2;
 import input.InputEvent;
 import java.util.Stack;
+import java.util.UUID;
 
 public class Game {
 
@@ -14,23 +17,30 @@ public class Game {
     private Screen screen;
     private Stack<InputEvent> eventQue;
 
-    private WorldHexGrid whg;
-
     private int cameraSpeed = 20;
 
     private boolean isMousePressed = false;
+    private UUID player;
 
     public Game(Screen screen, Stack<InputEvent> eventQue) {
         // Store the pixel array
-        this.root = new GameObject();
         this.screen = screen;
+        this.root = new GameObject(new Vec2(0, 0), this.screen);
         this.eventQue = eventQue;
+        init();
     }
 
-    public void init() {
-        // grid setup
-        //        this.whg = new WorldHexGrid(screen);
-        //        composables.add(this.whg);
+    private void init() {
+
+        GameObject player = new Player(new Vec2(0, 0), this.screen);
+        GameObject player2 = new Player(new Vec2(screen.width / 2, screen.height / 2), this.screen);
+        GameObject colors = new Colors(new Vec2(screen.width / 2, screen.height / 2), this.screen);
+
+        this.root.addChild(player);
+        this.root.addChild(player2);
+        this.root.addChild(colors);
+
+        this.player = player.getUuid();
     }
 
     public void update() {
@@ -96,6 +106,35 @@ public class Game {
                             position.add(new Vec2(-cameraSpeed, 0));
                             root.setPosition(position);
                         }
+
+                        // Player movement
+                        if (event.keyText.equals("Left")) {
+                            GameObject playerGameObject = root.getGameObject(player);
+                            playerGameObject.translatePosition(new Vec2(-5, 0));
+                        }
+                        if (event.keyText.equals("Right")) {
+                            GameObject playerGameObject = root.getGameObject(player);
+                            playerGameObject.translatePosition(new Vec2(5, 0));
+                        }
+                        if (event.keyText.equals("Up")) {
+                            GameObject playerGameObject = root.getGameObject(player);
+                            playerGameObject.translatePosition(new Vec2(0, 5));
+                        }
+                        if (event.keyText.equals("Down")) {
+                            GameObject playerGameObject = root.getGameObject(player);
+                            playerGameObject.translatePosition(new Vec2(0, -5));
+                        }
+
+                        // Kill player
+
+                        if (event.keyText.equals("NumPad-5")) {
+                            GameObject playerGameObject = root.getGameObject(player);
+                            playerGameObject.destroy();
+                        }
+                        if (event.keyText.equals("NumPad-9")) {
+                            root.destroy();
+                        }
+
                         System.out.println(event.keyText);
                         break;
                     default: {
@@ -110,12 +149,6 @@ public class Game {
         // Clear the screen buffer.
         screen.clearFrame();
 
-        // Clear the dead units
-        //        composables.removeIf((e) -> e.isDead());
-        screen.sudoShader(currentTime);
-
         root.compose();
-
-
     }
 }

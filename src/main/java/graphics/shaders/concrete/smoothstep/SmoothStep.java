@@ -39,7 +39,7 @@ public class SmoothStep extends FragmentShader {
         Vec2 uv = fragCoord.div(resolution); // [0,1]
         Vec3 c = new Vec3(0);
 
-        double m = VecMath.GLSLSmoothStep(currentMousePosition.x / 1000, currentMousePosition.y / 1000, uv.x);
+        double m = VecMath.GLSLSmoothStep(position.x / 1000, position.y / 1000, uv.x);
         c = c.add(m);
 
         return new Vec4(c, 0.0);

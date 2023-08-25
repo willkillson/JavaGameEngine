@@ -2,6 +2,7 @@ package game;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import game.object.GameObject;
 import graphics.vec.Vec2;
 import org.junit.jupiter.api.Test;
 
@@ -9,45 +10,45 @@ public class GameObjectTest {
 
     @Test
     public void shouldReturnNullParent() {
-        GameObject root = new GameObject();
+        GameObject root = new GameObject(new Vec2(0, 0), null);
         assertEquals(root.getParent(), null);
     }
 
     @Test
     public void shouldReturnParent() {
-        GameObject root = new GameObject();
-        GameObject child = new GameObject();
+        GameObject root = new GameObject(new Vec2(0, 0), null);
+        GameObject child = new GameObject(new Vec2(0, 0), null);
         root.addChild(child);
         assertEquals(root, child.getParent());
     }
 
     @Test
     public void shouldGetNestedGameObject() {
-        GameObject root = new GameObject();
-        GameObject child01 = new GameObject();
-        GameObject child02 = new GameObject();
-        GameObject child03 = new GameObject();
-        GameObject child04 = new GameObject();
+        GameObject root = new GameObject(new Vec2(0, 0), null);
+        GameObject child01 = new GameObject(new Vec2(0, 0), null);
+        GameObject child02 = new GameObject(new Vec2(0, 0), null);
+        GameObject child03 = new GameObject(new Vec2(0, 0), null);
+        GameObject child04 = new GameObject(new Vec2(0, 0), null);
 
-        GameObject child11 = new GameObject();
-        GameObject child12 = new GameObject();
-        GameObject child13 = new GameObject();
-        GameObject child14 = new GameObject();
+        GameObject child11 = new GameObject(new Vec2(0, 0), null);
+        GameObject child12 = new GameObject(new Vec2(0, 0), null);
+        GameObject child13 = new GameObject(new Vec2(0, 0), null);
+        GameObject child14 = new GameObject(new Vec2(0, 0), null);
 
-        GameObject child21 = new GameObject();
-        GameObject child22 = new GameObject();
-        GameObject child23 = new GameObject();
-        GameObject child24 = new GameObject();
+        GameObject child21 = new GameObject(new Vec2(0, 0), null);
+        GameObject child22 = new GameObject(new Vec2(0, 0), null);
+        GameObject child23 = new GameObject(new Vec2(0, 0), null);
+        GameObject child24 = new GameObject(new Vec2(0, 0), null);
 
-        GameObject child31 = new GameObject();
-        GameObject child32 = new GameObject();
-        GameObject child33 = new GameObject();
-        GameObject child34 = new GameObject();
+        GameObject child31 = new GameObject(new Vec2(0, 0), null);
+        GameObject child32 = new GameObject(new Vec2(0, 0), null);
+        GameObject child33 = new GameObject(new Vec2(0, 0), null);
+        GameObject child34 = new GameObject(new Vec2(0, 0), null);
 
-        GameObject child41 = new GameObject();
-        GameObject child42 = new GameObject();
-        GameObject child43 = new GameObject();
-        GameObject child44 = new GameObject();
+        GameObject child41 = new GameObject(new Vec2(0, 0), null);
+        GameObject child42 = new GameObject(new Vec2(0, 0), null);
+        GameObject child43 = new GameObject(new Vec2(0, 0), null);
+        GameObject child44 = new GameObject(new Vec2(0, 0), null);
 
         root.addChild(child01);
         root.addChild(child02);
@@ -82,14 +83,9 @@ public class GameObjectTest {
 
     @Test
     public void shouldGetWorldPosition() {
-        GameObject root = new GameObject();
-        root.setPosition(new Vec2(2.5, 2.5));
-
-        GameObject child1 = new GameObject();
-        child1.setPosition(new Vec2(2.5, 2.5));
-
-        GameObject child2 = new GameObject();
-        child2.setPosition(new Vec2(2.5, 2.5));
+        GameObject root = new GameObject(new Vec2(2.5, 2.5), null);
+        GameObject child1 = new GameObject(new Vec2(2.5, 2.5), null);
+        GameObject child2 = new GameObject(new Vec2(2.5, 2.5), null);
 
         root.addChild(child1);
         child1.addChild(child2);
@@ -99,7 +95,7 @@ public class GameObjectTest {
 
     @Test
     public void shouldSetGetLabel() {
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new GameObject(new Vec2(0, 0), null);
         gameObject.setLabel("fuzzy");
         assertEquals("fuzzy", gameObject.getLabel());
     }

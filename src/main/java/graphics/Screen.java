@@ -1,17 +1,9 @@
 package graphics;
 
-import game.entity.HexObject;
-import graphics.hex.Layout;
-import graphics.hex.Point;
 import graphics.shaders.FragmentShader;
 import graphics.shaders.concrete.ColorDemo;
-import graphics.shaders.concrete.FragmentCircleDemo;
-import graphics.shaders.concrete.RayMarching;
-import graphics.shaders.concrete.TruchetTiling;
-import graphics.shaders.concrete.smoothstep.SmoothStep;
 import graphics.vec.Vec2;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Screen {
 
@@ -47,7 +39,7 @@ public class Screen {
     }
 
     public void sudoShader(long time) {
-        Vec2 shaderResolution = new Vec2(128,128);
+        Vec2 shaderResolution = new Vec2(500, 500);
 
         int threadCount = 16;
 
@@ -209,21 +201,8 @@ public class Screen {
         }
     }
 
-    public void putPixel(int x, int y, Color c) {
-        putPixel(x, y, c.r, c.g, c.b);
-    }
-
-    public void putHexagon(HexObject hex, Layout layout, Point origin, Point size, Color c) {
-        ArrayList<Point> corners = layout.polygonCorners(hex);
-        corners.add(corners.get(0));
-        for (int i = 0; i < 6; i++) {
-            this.plotLine(
-                    (int) corners.get(i).x,
-                    (int) corners.get(i).y,
-                    (int) (corners.get(i + 1).x),
-                    (int) (corners.get(i + 1).y),
-                    c);
-        }
+    public void putPixel(int x, int y, Color c, boolean invert) {
+        putPixel(x, y, c.r, c.g, c.b, invert);
     }
 
     public void movePixels(

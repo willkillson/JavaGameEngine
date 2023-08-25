@@ -38,15 +38,15 @@ public class TruchetTiling extends FragmentShader {
         col = col.add(mask);
 
         //// Draws boxes around
-         if ((gv.x >.48)||(gv.y>.48)){
-            col = col.add(new Vec3(1,0,0));
-         }
+        if ((gv.x > .48) || (gv.y > .48)) {
+            col = col.add(new Vec3(1, 0, 0));
+        }
         return new Vec4(col, 1.0);
     }
 
     double hash21(Vec2 p) {
         p = fractional(p.mul(new Vec2(234.34, 435.345)));
-        Vec2 newp = new Vec2(p.x,p.y);
+        Vec2 newp = new Vec2(p.x, p.y);
         newp.add(34.23);
         p.add(dot(p, newp));
         return fractional(p.x * p.y);

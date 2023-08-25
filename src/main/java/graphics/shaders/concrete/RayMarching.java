@@ -29,7 +29,7 @@ public class RayMarching extends FragmentShader {
         Vec3 rd = Vec3.normalize(new Vec3(uv.x, uv.y, 1.0));
 
         double d = rayMarch(ro, rd);
-        d /= currentMousePosition.x;
+        d /= position.x;
         col = new Vec3(d);
 
         Vec4 out = new Vec4(col.x, col.y, col.z, 1.0);

@@ -1,13 +1,11 @@
-package game.entity;
+package game.object.concrete;
 
-import game.GameObject;
+import game.object.GameObject;
 import graphics.Color;
 import graphics.Screen;
 import graphics.vec.Vec2;
 
 public class PixelUnit extends GameObject {
-
-    private Screen screen;
 
     public boolean isDead;
 
@@ -16,8 +14,7 @@ public class PixelUnit extends GameObject {
     private Color color;
 
     public PixelUnit(Screen screen, Vec2 position, Vec2 velocity, Color rgb) {
-        super();
-        this.screen = screen;
+        super(position, screen);
         this.setPosition(position);
 
         double r1 = Math.random();
@@ -37,22 +34,6 @@ public class PixelUnit extends GameObject {
         this.isDead = false;
     }
 
-    public PixelUnit(Screen screen, Vec2 position, Vec2 velocity, int intRGB) {
-        super();
-
-        this.screen = screen;
-        this.setPosition(position);
-        this.velocity = new Vec2(velocity.x, velocity.y);
-
-        int red = (intRGB >> 16) & 0xFF;
-        int green = (intRGB >> 8) & 0xFF;
-        int blue = intRGB & 0xFF;
-
-        this.color = new Color("color", red, green, blue);
-
-        this.isDead = false;
-    }
-
     @Override
     public void update() {
         super.children.forEach((child) -> child.update());
@@ -65,8 +46,7 @@ public class PixelUnit extends GameObject {
     @Override
     public void compose() {
         super.children.forEach((child) -> child.compose());
-
-        screen.putPixel(
+        this.screen.putPixel(
                 (int) this.getWorldPosition().x,
                 (int) this.getWorldPosition().y,
                 this.color.r,
@@ -74,24 +54,4 @@ public class PixelUnit extends GameObject {
                 this.color.b,
                 false);
     }
-
-    //    @Override
-    //    public void kill() {
-    //        double random = Math.random();
-    //        int y;
-    //        int x;
-    //        if(random > 0.5){
-    //            y = -1;
-    //        }else{
-    //            y = 1;
-    //        }
-    //        random = Math.random();
-    //        if(random > 0.5){
-    //            x = -1;
-    //        }else{
-    //            x = 1;
-    //        }
-    //        this.vx = x*Math.random()*5 + 1;
-    //        this.vy = y*Math.random()*5 + 1;
-    //    }
 }

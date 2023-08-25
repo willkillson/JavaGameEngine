@@ -1,5 +1,6 @@
-package game;
+package game.object;
 
+import graphics.Screen;
 import graphics.vec.Vec2;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +27,28 @@ public class GameObject {
     @Setter
     private GameObject parent;
 
+    protected Screen screen;
+
+    @Getter
+    @Setter
+    protected boolean isAlive;
+
     protected List<GameObject> children;
 
-    public GameObject() {
-        this.position = new Vec2(0, 0);
+    public GameObject(Vec2 position, Screen screen) {
+        this.position = position;
+        this.screen = screen;
         this.rotation = new Vec2(0, 0);
         this.scale = new Vec2(0, 0);
         this.children = new ArrayList<>();
         this.parent = null;
         this.label = "default";
         this.uuid = UUID.randomUUID();
+        this.isAlive = true;
+    }
+
+    public void translatePosition(Vec2 vec2) {
+        this.position.add(vec2);
     }
 
     public GameObject getGameObject(UUID uuid) {
@@ -84,6 +97,13 @@ public class GameObject {
     }
 
     public void compose() {
-        children.forEach((child) -> child.compose());
+        if (this.isAlive) {
+            children.forEach((child) -> child.compose());
+        }
+    }
+
+    public void destroy() {
+        this.setAlive(false);
+        children.forEach((child) -> child.destroy());
     }
 }

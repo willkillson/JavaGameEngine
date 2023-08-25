@@ -14,14 +14,13 @@ public class ColorDemo extends FragmentShader {
 
     @Override
     public Vec4 frag(Vec2 fragCoord) {
-        fragCoord = VecMath.rot(fragCoord,Math.sin(time/1000d));
+        fragCoord = VecMath.rot(fragCoord, Math.sin(time / 1000d));
         Vec2 uv = fragCoord.div(resolution.y);
 
-
         uv = uv.min(0.5);
-        double num1 = Math.abs(Math.sin(time/1000d));
-        double num2 = Math.abs(Math.cos(time/1000d));
-        uv.add(new Vec2(uv.x*num1,uv.y*num2));
+        double num1 = Math.abs(Math.sin(time / 1000d));
+        double num2 = Math.abs(Math.cos(time / 1000d));
+        uv.add(new Vec2(uv.x * num1, uv.y * num2));
         return new Vec4(uv.x, uv.y, 0, 0);
     }
 }

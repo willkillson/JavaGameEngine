@@ -34,6 +34,12 @@ dependencies {
 
 }
 
+tasks {
+    build {
+        dependsOn spotlessApply
+    }
+}
+
 test {
     useJUnitPlatform()
 }

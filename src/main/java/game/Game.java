@@ -32,12 +32,10 @@ public class Game {
 
     private void init() {
 
-        GameObject player = new Player(new Vec2(0, 0), this.screen);
-        GameObject player2 = new Player(new Vec2(screen.width / 2, screen.height / 2), this.screen);
+        GameObject player = new Player(new Vec2(screen.width / 2, screen.height / 2), this.screen);
         GameObject colors = new Colors(new Vec2(screen.width / 2, screen.height / 2), this.screen);
 
         this.root.addChild(player);
-        this.root.addChild(player2);
         this.root.addChild(colors);
 
         this.player = player.getUuid();

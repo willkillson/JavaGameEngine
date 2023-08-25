@@ -5,6 +5,8 @@ import graphics.vec.Vec2;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -94,6 +96,12 @@ public class GameObject {
 
     public void update() {
         children.forEach((child) -> child.update());
+        this.children
+            .stream()
+            .filter((child)->!child.isAlive())
+            .collect(Collectors.toList())
+            .forEach(gameObject -> gameObject.destroy());
+        this.children.removeIf((gameObject -> gameObject.isAlive()==false));
     }
 
     public void compose() {

@@ -151,10 +151,6 @@ public class Screen {
         }
     }
 
-    public void putPixel(Vec2 point, int r, int g, int b) {
-        putPixel((int) point.x, (int) point.y, r, g, b);
-    }
-
     public void putPixel(int x, int y, int r, int g, int b, boolean invert) {
         if (x < 0 || x >= width) {
             return;
@@ -175,7 +171,9 @@ public class Screen {
 
         try {
             int number = (r << 16) | (g << 8) | b;
-            pixels[x + (newY * width)] = number;
+            if(number>0){
+                pixels[x + (newY * width)] = number;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

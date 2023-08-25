@@ -19,8 +19,6 @@ public class ImageLoader {
             System.out.println("Image could not be read");
             System.exit(1);
         }
-        // C:\Users\willk\code\JavaGameEngine\assets\hex_titles\png\empty_hex_tile_1000.png
-
         return bi;
     }
 

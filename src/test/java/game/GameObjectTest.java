@@ -1,6 +1,7 @@
 package game;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import game.object.GameObject;
 import graphics.vec.Vec2;
@@ -11,7 +12,7 @@ public class GameObjectTest {
     @Test
     public void shouldReturnNullParent() {
         GameObject root = new GameObject(new Vec2(0, 0), null);
-        assertEquals(root.getParent(), null);
+        assertNull(root.getParent());
     }
 
     @Test
